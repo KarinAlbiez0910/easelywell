@@ -229,6 +229,7 @@
         margin-top: 0.5rem;
     }
     .make-btn:hover { background-color: var(--green-mid); }
+    .make-btn.saved { background-color: #5A8A7A; }
 
     /* No results */
     .no-results {
@@ -326,9 +327,17 @@
                     {{ recipe.description }}
                 </div>
 
-                <button class="make-btn" onclick="madeIt('recipe-{{ recipe.id }}', '{{ recipe.name }}')">
-                    I'll make this! 🔔
-                </button>
+                <form method="POST" action="{{ url_for('main.toggle_favourite', recipe_id=recipe.id) }}">
+                    {% set is_saved = current_user.is_authenticated and recipe.id in saved_recipe_ids %}
+                    <button type="submit" class="make-btn {% if is_saved %}saved{% endif %}">
+                        {% if is_saved %}
+                            ✅ Saved to favourites!
+                        {% else %}
+                            I'll make this! 🔔
+                        {% endif %}
+                    </button>
+                </form>
+
             </div>
 
         </div>
@@ -351,13 +360,6 @@
     function toggleRecipe(id) {
         const card = document.getElementById(id);
         card.classList.toggle('open');
-    }
-
-    function madeIt(id, name) {
-        const btn = document.querySelector(`#${id} .make-btn`);
-        btn.textContent = '✅ Added to your favourites!';
-        btn.style.backgroundColor = '#5A8A7A';
-        btn.disabled = true;
     }
 </script>
 {% endblock %}

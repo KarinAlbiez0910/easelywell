@@ -83,6 +83,7 @@ def logout():
 @bp.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
+    from app.models import UserFavouriteRecipe
     if request.method == 'POST':
         current_user.username = request.form.get('username', '').strip()
         current_user.age_range = request.form.get('age_range', '')
@@ -93,4 +94,8 @@ def profile():
         flash('Profile saved! 🌿', 'success')
         return redirect(url_for('auth.profile'))
 
-    return render_template('auth/profile.html')
+    favourites = UserFavouriteRecipe.query.filter_by(
+        user_id=current_user.id
+    ).order_by(UserFavouriteRecipe.saved_at.desc()).all()
+
+    return render_template('auth/profile.html', favourites=favourites)

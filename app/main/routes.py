@@ -1,12 +1,13 @@
-from flask import render_template, request
-from flask_login import login_required
+from flask import render_template, request, redirect, url_for, flash
+from flask_login import login_required, current_user
 from app.main import bp
+from app import db
 from app.models import (
     HealthConcern, Ingredient,
     NutrientIngredient, HealthConcernNutrient,
-    Recipe, RecipeIngredient
+    Recipe, RecipeIngredient,
+    UserFavouriteRecipe
 )
-
 
 @bp.route('/')
 def index():
@@ -39,28 +40,50 @@ def ingredients(concern_id):
 @bp.route('/recipes', methods=['POST'])
 @login_required
 def recipes():
+    from app.models import UserFavouriteRecipe
     concern_id = request.form.get('concern_id', type=int)
     ingredient_ids = request.form.getlist('ingredient_ids', type=int)
     concern = HealthConcern.query.get_or_404(concern_id)
 
-    # Find recipes that contain at least one selected ingredient
     matching = RecipeIngredient.query.filter(
         RecipeIngredient.ingredient_id.in_(ingredient_ids)
     ).all()
 
-    # Score recipes by how many selected ingredients they contain
     recipe_scores = {}
     for ri in matching:
         recipe_scores[ri.recipe_id] = recipe_scores.get(ri.recipe_id, 0) + 1
 
-    # Sort by score and take top 3
     top_ids = sorted(recipe_scores, key=recipe_scores.get, reverse=True)[:3]
     recipes = Recipe.query.filter(Recipe.id.in_(top_ids)).all()
-
-    # Sort recipes by score
     recipes = sorted(recipes, key=lambda r: recipe_scores.get(r.id, 0), reverse=True)
+
+    # Get user's saved recipe IDs
+    saved = UserFavouriteRecipe.query.filter_by(user_id=current_user.id).all()
+    saved_recipe_ids = [f.recipe_id for f in saved]
 
     return render_template('main/recipes.html',
                            concern=concern,
                            recipes=recipes,
-                           selected_ingredient_ids=ingredient_ids)
+                           selected_ingredient_ids=ingredient_ids,
+                           saved_recipe_ids=saved_recipe_ids)
+
+@bp.route('/favourite/<int:recipe_id>', methods=['POST'])
+@login_required
+def toggle_favourite(recipe_id):
+    recipe = Recipe.query.get_or_404(recipe_id)
+    existing = UserFavouriteRecipe.query.filter_by(
+        user_id=current_user.id,
+        recipe_id=recipe_id
+    ).first()
+
+    if existing:
+        db.session.delete(existing)
+        db.session.commit()
+        flash(f'"{recipe.name}" removed from favourites.', 'info')
+    else:
+        fav = UserFavouriteRecipe(user_id=current_user.id, recipe_id=recipe_id)
+        db.session.add(fav)
+        db.session.commit()
+        flash(f'"{recipe.name}" saved to favourites! 🌿', 'success')
+
+    return redirect(url_for('main.index'))
