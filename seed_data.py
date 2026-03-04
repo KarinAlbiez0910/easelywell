@@ -10,6 +10,8 @@ app = create_app()
 with app.app_context():
 
     # ── Clear all existing data ──────────────────────────────────
+    from app.models import UserFavouriteRecipe
+    UserFavouriteRecipe.query.delete()
     RecipeIngredient.query.delete()
     Recipe.query.delete()
     NutrientIngredient.query.delete()
@@ -83,6 +85,10 @@ with app.app_context():
         Ingredient(name="Olive Oil",      type="oil",         is_vegan=True,  is_vegetarian=True),
         Ingredient(name="Beetroot",       type="vegetable",   is_vegan=True,  is_vegetarian=True),
         Ingredient(name="Chamomile",      type="herb",        is_vegan=True,  is_vegetarian=True),
+        Ingredient(name="Chicken Breast",  type="meat", is_vegan=False, is_vegetarian=False),
+        Ingredient(name="Beef Steak",      type="meat", is_vegan=False, is_vegetarian=False),
+        Ingredient(name="Turkey",          type="meat", is_vegan=False, is_vegetarian=False),
+        Ingredient(name="Lamb",            type="meat", is_vegan=False, is_vegetarian=False),
     ]
     db.session.add_all(ingredients)
     db.session.commit()
@@ -179,6 +185,15 @@ with app.app_context():
         (n("Vitamin E"),    i("Almonds")),
         (n("Vitamin E"),    i("Avocado")),
         (n("Vitamin E"),    i("Olive Oil")),
+        (n("Iron"),      i("Beef Steak")),
+        (n("Iron"),      i("Lamb")),
+        (n("Zinc"),      i("Beef Steak")),
+        (n("Zinc"),      i("Lamb")),
+        (n("Zinc"),      i("Turkey")),
+        (n("B Vitamins"), i("Chicken Breast")),
+        (n("B Vitamins"), i("Turkey")),
+        (n("B Vitamins"), i("Beef Steak"))
+                
     ]
     for nutrient, ingredient in ni_links:
         db.session.add(NutrientIngredient(
@@ -279,6 +294,42 @@ with app.app_context():
             "is_vegetarian": True,
             "ingredients": ["Beetroot", "Quinoa", "Olive Oil"]
         },
+        {
+    "name": "Chicken & Spinach Stir Fry",
+    "description": "Chicken breast is rich in B vitamins and lean protein that supports energy metabolism. Spinach adds iron and folate for red blood cell production.",
+    "instructions": "1. Slice chicken breast into strips.|2. Stir fry in olive oil over high heat for 5 min.|3. Add spinach and garlic and cook 2 min.|4. Season with soy sauce and serve with rice.",
+    "prep_time": 15,
+    "is_vegan": False,
+    "is_vegetarian": False,
+    "ingredients": ["Chicken Breast", "Spinach", "Garlic", "Olive Oil"]
+},
+{
+    "name": "Beef & Broccoli Bowl",
+    "description": "Beef is one of the richest sources of iron and zinc. Broccoli adds vitamin C which dramatically boosts iron absorption from the meat.",
+    "instructions": "1. Slice beef steak thinly against the grain.|2. Sear in a hot pan for 3 min each side.|3. Steam broccoli until tender.|4. Combine in a bowl and drizzle with olive oil and lemon.",
+    "prep_time": 20,
+    "is_vegan": False,
+    "is_vegetarian": False,
+    "ingredients": ["Beef Steak", "Broccoli", "Olive Oil"]
+},
+{
+    "name": "Turkey & Sweet Potato Bake",
+    "description": "Turkey is a lean protein packed with B vitamins and zinc. Sweet potato provides potassium and fiber for sustained energy and gut health.",
+    "instructions": "1. Dice sweet potato and roast at 200°C for 25 min.|2. Season turkey with herbs and bake alongside for 20 min.|3. Combine in a baking dish.|4. Serve with a green salad.",
+    "prep_time": 35,
+    "is_vegan": False,
+    "is_vegetarian": False,
+    "ingredients": ["Turkey", "Sweet Potato", "Olive Oil"]
+},
+{
+    "name": "Lamb & Chickpea Stew",
+    "description": "Lamb is rich in iron, zinc and B12. Chickpeas add fiber and plant protein making this a powerful anti-inflammatory and immune-supporting meal.",
+    "instructions": "1. Brown lamb pieces in olive oil.|2. Add chickpeas, turmeric and ginger.|3. Pour in stock and simmer for 30 min.|4. Serve with quinoa or bread.",
+    "prep_time": 40,
+    "is_vegan": False,
+    "is_vegetarian": False,
+    "ingredients": ["Lamb", "Chickpeas", "Turmeric", "Ginger", "Olive Oil"]
+}
     ]
 
     for r in recipes_data:

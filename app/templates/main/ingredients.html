@@ -301,6 +301,20 @@
     <div class="validation-msg" id="validation-msg">
         Select at least 1 ingredient to continue
     </div>
+    {% if dietary_preference and dietary_preference != 'No restrictions' %}
+    <div style="
+        text-align: center;
+        font-size: 0.82rem;
+        color: var(--green-dark);
+        background: #f0f7f5;
+        border-radius: 50px;
+        padding: 0.4rem 1rem;
+        margin: 0 auto 1.5rem;
+        width: 100%;
+    ">
+        🥗 Showing ingredients matching your <strong>{{ dietary_preference }}</strong> preference
+    </div>
+{% endif %}
 
     <!-- Ingredient grid -->
     <form method="POST" action="{{ url_for('main.recipes') }}" id="ingredients-form">
