@@ -231,6 +231,15 @@
     .make-btn:hover { background-color: var(--green-mid); }
     .make-btn.saved { background-color: #5A8A7A; }
 
+    /* Unsave button */
+    .unsave-btn {
+        background-color: #5A8A7A;
+        font-size: 0.92rem;
+    }
+    .unsave-btn:hover {
+        background-color: #c0392b;
+    }
+
     /* No results */
     .no-results {
         text-align: center;
@@ -291,7 +300,7 @@
 
     {% if recipes %}
         {% for recipe in recipes %}
-        <div class="recipe-card {% if loop.first %}open{% endif %}" id="recipe-{{ recipe.id }}">
+        <div class="recipe-card" id="recipe-{{ recipe.id }}">
 
             <div class="recipe-header" onclick="toggleRecipe('recipe-{{ recipe.id }}')">
                 <div class="recipe-header-left">
@@ -329,13 +338,15 @@
 
                 <form method="POST" action="{{ url_for('main.toggle_favourite', recipe_id=recipe.id) }}">
                     {% set is_saved = current_user.is_authenticated and recipe.id in saved_recipe_ids %}
-                    <button type="submit" class="make-btn {% if is_saved %}saved{% endif %}">
-                        {% if is_saved %}
-                            ✅ Saved to favourites!
-                        {% else %}
+                    {% if is_saved %}
+                        <button type="submit" class="make-btn unsave-btn">
+                            ✅ Saved &nbsp;·&nbsp; Click to unsave
+                        </button>
+                    {% else %}
+                        <button type="submit" class="make-btn">
                             I'll make this! 🔔
-                        {% endif %}
-                    </button>
+                        </button>
+                    {% endif %}
                 </form>
 
             </div>

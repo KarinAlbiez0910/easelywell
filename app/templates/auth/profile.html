@@ -166,27 +166,29 @@
 
     /* View recipe button */
     .view-recipe-btn {
-        background: none;
-        border: 1.5px solid var(--green-dark);
-        color: var(--green-dark);
-        padding: 0.45rem 1rem;
-        border-radius: 50px;
-        font-size: 0.82rem;
-        font-family: 'Lato', sans-serif;
-        font-weight: 700;
-        cursor: pointer;
-        white-space: nowrap;
-        transition: all 0.2s;
-        flex-shrink: 0;
-    }
-    .view-recipe-btn:hover {
-        background-color: var(--green-dark);
-        color: white;
-    }
-    .view-recipe-btn.open {
-        background-color: var(--green-dark);
-        color: white;
-    }
+    background: none;
+    border: 1.5px solid var(--green-dark);
+    color: var(--green-dark);
+    padding: 0.6rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.82rem;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    display: inline-block;
+    margin-top: 0.5rem;
+    width: auto;
+}
+.view-recipe-btn:hover {
+    background-color: var(--green-dark);
+    color: white;
+}
+.view-recipe-btn.open {
+    background-color: var(--green-dark);
+    color: white;
+}
 
     /* Expandable body */
     .saved-recipe-body {
@@ -411,7 +413,19 @@
                 <!-- Always visible summary -->
                 <div class="saved-recipe-summary">
                     <div class="saved-recipe-info">
-                        <h3>{{ fav.recipe.name }}</h3>
+
+                        <!-- Title + buttons on same line -->
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; margin-bottom:0.4rem;">
+                            <h3 style="margin:0;">{{ fav.recipe.name }}</h3>
+                            <div style="display:flex; gap:0.5rem; flex-shrink:0;">
+                                <button class="view-recipe-btn" onclick="toggleSaved('saved-{{ fav.recipe.id }}', this)">
+                                    View Recipe</button>
+                                <form method="POST" action="{{ url_for('main.toggle_favourite', recipe_id=fav.recipe.id) }}" style="display:inline;">
+                                    <button type="submit" class="remove-btn-full">Delete Recipe</button>
+                                </form>
+                            </div>
+                        </div>
+
                         <div class="saved-recipe-meta">
                             🕐 {{ fav.recipe.prep_time }} min &nbsp;·&nbsp;
                             🌿 {% if fav.recipe.is_vegan %}Vegan{% elif fav.recipe.is_vegetarian %}Vegetarian{% else %}Non-vegetarian{% endif %}
@@ -423,10 +437,8 @@
                             </span>
                             {% endfor %}
                         </div>
+
                     </div>
-                    <button class="view-recipe-btn" onclick="toggleSaved('saved-{{ fav.recipe.id }}', this)">
-                        View Recipe ▾
-                    </button>
                 </div>
 
                 <!-- Expandable full details -->
@@ -445,10 +457,6 @@
                         <div class="why-title">🌿 Why this works for you</div>
                         {{ fav.recipe.description }}
                     </div>
-
-                    <form method="POST" action="{{ url_for('main.toggle_favourite', recipe_id=fav.recipe.id) }}">
-                        <button type="submit" class="remove-btn-full">Remove</button>
-                    </form>
                 </div>
 
             </div>
@@ -501,7 +509,7 @@
         const isOpen = card.classList.contains('open');
         card.classList.toggle('open');
         btn.classList.toggle('open');
-        btn.textContent = isOpen ? 'View Recipe ▾' : 'Close ▴';
+        btn.textContent = isOpen ? 'View Recipe' : 'Close';
     }
 </script>
 {% endblock %}

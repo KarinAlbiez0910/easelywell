@@ -39,6 +39,12 @@
             font-weight: 700;
             color: var(--text-dark);
             text-decoration: none;
+            white-space: nowrap;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
         }
         .nav-links a {
             font-size: 0.9rem;
@@ -46,6 +52,7 @@
             text-decoration: none;
             margin-left: 1.5rem;
             transition: color 0.2s;
+            white-space: nowrap;
         }
         .nav-links a:hover { color: var(--green-dark); }
 
@@ -112,6 +119,31 @@
         }
         .form-group input:focus, .form-group select:focus { border-color: var(--green-mid); }
         .card { background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+
+        /* ── Mobile Responsive ────────────────────────────── */
+        @media (max-width: 600px) {
+            nav { padding: 0.75rem 1rem; }
+            .nav-logo { font-size: 1.2rem; }
+            .nav-links {
+                display: flex;
+                align-items: center;
+                flex-wrap: nowrap;
+            }
+            .nav-links a {
+                margin-left: 0.75rem;
+                font-size: 0.78rem;
+            }
+            .btn-primary {
+                padding: 0.85rem 1.75rem;
+                font-size: 0.95rem;
+            }
+            .flash { margin: 0.5rem 1rem; }
+            .card { padding: 1.25rem; }
+            .form-group input,
+            .form-group select {
+                font-size: 16px;
+            }
+        }
     </style>
     {% block extra_styles %}{% endblock %}
 </head>
