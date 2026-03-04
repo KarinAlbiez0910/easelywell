@@ -76,7 +76,41 @@ def recipes():
         recipe_scores[ri.recipe_id] = recipe_scores.get(ri.recipe_id, 0) + 1
 
     top_ids = sorted(recipe_scores, key=recipe_scores.get, reverse=True)[:3]
-    recipes = Recipe.query.filter(Recipe.id.in_(top_ids)).all()
+
+    # Base query
+    query = Recipe.query.filter(Recipe.id.in_(top_ids))
+
+    # Filter recipes by dietary preference
+    preference = current_user.dietary_preference
+
+    if preference == 'Vegan':
+        query = query.filter(Recipe.is_vegan == True)
+    elif preference == 'Vegetarian':
+        query = query.filter(Recipe.is_vegetarian == True)
+    elif preference == 'Pescatarian':
+        query = query.filter(
+            db.or_(
+                Recipe.is_vegetarian == True,
+                Recipe.is_vegan == True
+            )
+        )
+        # Also include fish recipes by checking recipe ingredients
+        fish_recipes = db.session.query(Recipe.id).join(
+            RecipeIngredient
+        ).join(Ingredient).filter(
+            Ingredient.type == 'fish',
+            Recipe.id.in_(top_ids)
+        ).all()
+        fish_recipe_ids = [r.id for r in fish_recipes]
+        if fish_recipe_ids:
+            query = Recipe.query.filter(
+                db.or_(
+                    db.and_(Recipe.id.in_(top_ids), Recipe.is_vegetarian == True),
+                    Recipe.id.in_(fish_recipe_ids)
+                )
+            )
+
+    recipes = query.all()
     recipes = sorted(recipes, key=lambda r: recipe_scores.get(r.id, 0), reverse=True)
 
     saved = UserFavouriteRecipe.query.filter_by(user_id=current_user.id).all()
