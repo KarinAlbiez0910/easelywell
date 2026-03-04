@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard – EaselyWell{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .dashboard-page {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem 4rem;
+    }
+    .dashboard-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+    }
+    .dashboard-header h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--text-dark);
+    }
+    .dashboard-header a {
+        font-size: 0.9rem;
+        color: var(--text-mid);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    .dashboard-header a:hover { color: var(--green-dark); }
+
+    /* Tab switcher */
+    .tab-bar {
+        display: flex;
+        background-color: var(--cream-dark);
+        border-radius: 50px;
+        padding: 4px;
+        margin-bottom: 2rem;
+    }
+    .tab {
+        flex: 1;
+        text-align: center;
+        padding: 0.6rem 1rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        color: var(--text-mid);
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .tab.active {
+        background-color: white;
+        color: var(--text-dark);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    /* Section */
+    .section { margin-bottom: 1.75rem; }
+    .section-label {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 0.75rem;
+    }
+
+    /* Pill selectors */
+    .pill-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    .pill {
+        padding: 0.45rem 1rem;
+        border-radius: 50px;
+        border: 1.5px solid var(--cream-dark);
+        background-color: white;
+        font-size: 0.85rem;
+        font-family: 'Lato', sans-serif;
+        color: var(--text-dark);
+        cursor: pointer;
+        transition: all 0.15s;
+        user-select: none;
+    }
+    .pill:hover { border-color: var(--green-mid); }
+    .pill.selected {
+        background-color: var(--green-dark);
+        border-color: var(--green-dark);
+        color: white;
+        font-weight: 700;
+    }
+
+    /* Display name input */
+    .name-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1.5px solid var(--cream-dark);
+        border-radius: 12px;
+        font-family: 'Lato', sans-serif;
+        font-size: 0.95rem;
+        color: var(--text-dark);
+        background-color: white;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+    .name-input:focus { border-color: var(--green-mid); }
+
+    /* Save button */
+    .save-btn {
+        width: 100%;
+        padding: 1rem;
+        text-align: center;
+        margin-top: 1rem;
+        font-size: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+
+    <div class="dashboard-header">
+        <a href="{{ url_for('main.index') }}">← Home</a>
+        <h2>My Dashboard</h2>
+        <a href="{{ url_for('auth.logout') }}">→</a>
+    </div>
+
+    <!-- Tab bar -->
+    <div class="tab-bar">
+        <a href="#" class="tab active">👤 Profile</a>
+        <a href="#" class="tab">🍽 Saved Recipes</a>
+    </div>
+
+    <form method="POST" action="{{ url_for('auth.profile') }}">
+
+        <!-- Display Name -->
+        <div class="section">
+            <div class="section-label">Display Name</div>
+            <input
+                class="name-input"
+                type="text"
+                name="username"
+                value="{{ current_user.username }}"
+                placeholder="Your name"
+            >
+        </div>
+
+        <!-- Age Group -->
+        <div class="section">
+            <div class="section-label">Age Group</div>
+            <div class="pill-group" id="age-group">
+                {% set ages = ['Under 20', '20s', '30s', '40s', '50s', '60s', '70s and older'] %}
+                {% for age in ages %}
+                <div class="pill {% if current_user.age_range == age %}selected{% endif %}"
+                     data-group="age_range"
+                     data-value="{{ age }}"
+                     onclick="selectPill(this)">{{ age }}</div>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="age_range" id="age_range" value="{{ current_user.age_range or '' }}">
+        </div>
+
+        <!-- Gender -->
+        <div class="section">
+            <div class="section-label">Gender</div>
+            <div class="pill-group">
+                {% set genders = ['Female', 'Male', 'Non-binary', 'Prefer not to say'] %}
+                {% for g in genders %}
+                <div class="pill {% if current_user.gender == g %}selected{% endif %}"
+                     data-group="gender"
+                     data-value="{{ g }}"
+                     onclick="selectPill(this)">{{ g }}</div>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="gender" id="gender" value="{{ current_user.gender or '' }}">
+        </div>
+
+        <!-- Family Situation -->
+        <div class="section">
+            <div class="section-label">Family Situation</div>
+            <div class="pill-group">
+                {% set families = [
+                    'Single', 'Couple', 'Family with young children',
+                    'Family with teens', 'Empty nester', 'Living with roommates',
+                    'Single parent', 'Living with elderly parents', 'Multigenerational home'
+                ] %}
+                {% for f in families %}
+                <div class="pill {% if current_user.family_situation == f %}selected{% endif %}"
+                     data-group="family_situation"
+                     data-value="{{ f }}"
+                     onclick="selectPill(this)">{{ f }}</div>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="family_situation" id="family_situation" value="{{ current_user.family_situation or '' }}">
+        </div>
+
+        <!-- Dietary Preference -->
+        <div class="section">
+            <div class="section-label">Dietary Preference</div>
+            <div class="pill-group">
+                {% set diets = [
+                    'No restrictions', 'Vegan', 'Vegetarian', 'Pescatarian',
+                    'Flexitarian', 'Keto', 'Paleo', 'Gluten-free',
+                    'Dairy-free', 'Halal', 'Kosher', 'Low FODMAP',
+                    'Mediterranean', 'Low carb', 'Low sugar', 'Whole foods'
+                ] %}
+                {% for d in diets %}
+                <div class="pill {% if current_user.dietary_preference == d %}selected{% endif %}"
+                     data-group="dietary_preference"
+                     data-value="{{ d }}"
+                     onclick="selectPill(this)">{{ d }}</div>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="dietary_preference" id="dietary_preference" value="{{ current_user.dietary_preference or '' }}">
+        </div>
+
+        <button type="submit" class="btn-primary save-btn">Save Profile</button>
+
+    </form>
+</div>
+
+<script>
+    function selectPill(el) {
+        const group = el.dataset.group;
+        // Deselect all pills in same group
+        document.querySelectorAll(`.pill[data-group="${group}"]`).forEach(p => p.classList.remove('selected'));
+        // Select clicked pill
+        el.classList.add('selected');
+        // Update hidden input
+        document.getElementById(group).value = el.dataset.value;
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,28 @@
+# Virtual environment
+venv/
+
+# Environment variables (NEVER commit this!)
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Flask migrations (optional, but keep it for now)
+# migrations/
+
+# Database
+*.db
+*.sqlite
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

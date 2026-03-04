@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EaselyWell{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #F2EFE7;
+            --cream-dark: #E8E3D8;
+            --green-dark: #3D6B5E;
+            --green-mid: #5A8A7A;
+            --text-dark: #2C3E35;
+            --text-mid: #6B7C75;
+            --orange-accent: #E8956D;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--cream);
+            font-family: 'Lato', sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+        h1, h2, h3, .serif { font-family: 'Playfair Display', serif; }
+
+        nav {
+            background-color: var(--cream);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--cream-dark);
+        }
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+        .nav-links a {
+            font-size: 0.9rem;
+            color: var(--text-mid);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--green-dark); }
+
+        .btn-primary {
+            background-color: var(--green-dark);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-family: 'Lato', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        .btn-primary:hover { background-color: var(--green-mid); transform: translateY(-1px); }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--green-dark);
+            border: 2px solid var(--green-dark);
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+        .btn-secondary:hover { background-color: var(--green-dark); color: white; }
+
+        .flash { padding: 0.75rem 1.5rem; margin: 1rem 2rem; border-radius: 8px; font-size: 0.9rem; }
+        .flash.success { background-color: #d4edda; color: #155724; }
+        .flash.danger  { background-color: #f8d7da; color: #721c24; }
+        .flash.info    { background-color: #d1ecf1; color: #0c5460; }
+
+        main { animation: fadeIn 0.4s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-mid);
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid var(--cream-dark);
+            border-radius: 10px;
+            background-color: white;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            transition: border-color 0.2s;
+            outline: none;
+        }
+        .form-group input:focus, .form-group select:focus { border-color: var(--green-mid); }
+        .card { background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    </style>
+    {% block extra_styles %}{% endblock %}
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('main.index') }}" class="nav-logo">EaselyWell</a>
+        <div class="nav-links">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('main.index') }}">Home</a>
+                <a href="{{ url_for('auth.profile') }}">Profile</a>
+                <a href="{{ url_for('auth.logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('auth.login') }}">Login</a>
+                <a href="{{ url_for('auth.register') }}">Sign Up</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <main>{% block content %}{% endblock %}</main>
+</body>
+</html>

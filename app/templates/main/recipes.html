@@ -1,0 +1,363 @@
+{% extends "base.html" %}
+{% block title %}Recipes for you – EaselyWell{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .recipes-page {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem 4rem;
+    }
+
+    /* Top bar */
+    .top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+    }
+    .back-link {
+        font-size: 0.9rem;
+        color: var(--text-mid);
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--green-dark); }
+    .concern-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: white;
+        border: 1.5px solid var(--cream-dark);
+        border-radius: 50px;
+        padding: 0.35rem 0.9rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-dark);
+    }
+
+    /* Stepper */
+    .stepper {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        margin-bottom: 2.5rem;
+    }
+    .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        position: relative;
+    }
+    .step:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        width: 100%;
+        height: 2px;
+        background-color: var(--cream-dark);
+        z-index: 0;
+    }
+    .step.completed:not(:last-child)::after { background-color: var(--green-dark); }
+    .step-dot {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid var(--cream-dark);
+        background-color: var(--cream);
+        z-index: 1;
+    }
+    .step.completed .step-dot { background-color: var(--green-dark); border-color: var(--green-dark); }
+    .step.active .step-dot { background-color: white; border-color: var(--green-dark); border-width: 3px; }
+    .step-label { font-size: 0.75rem; color: var(--text-light, #9AADA7); margin-top: 0.4rem; font-weight: 600; }
+    .step.active .step-label,
+    .step.completed .step-label { color: var(--green-dark); }
+
+    /* Page heading */
+    .page-heading {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .page-heading h1 {
+        font-size: 2.2rem;
+        font-weight: 900;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+    }
+    .page-heading p {
+        font-size: 0.95rem;
+        color: var(--text-mid);
+        line-height: 1.5;
+    }
+
+    /* Recipe card */
+    .recipe-card {
+        background: white;
+        border: 1.5px solid var(--cream-dark);
+        border-radius: 20px;
+        margin-bottom: 1.25rem;
+        overflow: hidden;
+        transition: box-shadow 0.2s;
+    }
+    .recipe-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+
+    .recipe-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.25rem 1.5rem;
+        cursor: pointer;
+    }
+    .recipe-header-left h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 0.4rem;
+    }
+    .recipe-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.82rem;
+        color: var(--text-mid);
+        margin-bottom: 0.6rem;
+    }
+    .recipe-meta span { display: flex; align-items: center; gap: 0.3rem; }
+
+    .ingredient-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .ingredient-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        background: var(--cream);
+        border: 1px solid var(--cream-dark);
+        border-radius: 50px;
+        padding: 0.2rem 0.6rem;
+        font-size: 0.78rem;
+        color: var(--text-dark);
+    }
+    .ingredient-pill.matched {
+        background: #e8f5f1;
+        border-color: var(--green-light);
+        color: var(--green-dark);
+        font-weight: 700;
+    }
+
+    .toggle-arrow {
+        font-size: 1rem;
+        color: var(--text-mid);
+        transition: transform 0.2s;
+        flex-shrink: 0;
+    }
+    .recipe-card.open .toggle-arrow { transform: rotate(180deg); }
+
+    /* Recipe body */
+    .recipe-body {
+        display: none;
+        padding: 0 1.5rem 1.5rem;
+        border-top: 1px solid var(--cream-dark);
+    }
+    .recipe-card.open .recipe-body { display: block; }
+
+    .steps-label {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin: 1rem 0 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .steps-list { list-style: none; padding: 0; }
+    .steps-list li {
+        display: flex;
+        gap: 0.75rem;
+        font-size: 0.9rem;
+        color: var(--text-dark);
+        line-height: 1.5;
+        margin-bottom: 0.5rem;
+    }
+    .step-num {
+        background: var(--cream-dark);
+        color: var(--text-mid);
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        font-size: 0.75rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    /* Why this works box */
+    .why-box {
+        background: #f0f7f5;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin: 1rem 0;
+        font-size: 0.88rem;
+        color: var(--text-dark);
+        line-height: 1.6;
+    }
+    .why-box .why-title {
+        font-weight: 700;
+        color: var(--green-dark);
+        margin-bottom: 0.3rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    /* CTA button */
+    .make-btn {
+        width: 100%;
+        padding: 0.9rem;
+        background-color: var(--green-dark);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-family: 'Lato', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        margin-top: 0.5rem;
+    }
+    .make-btn:hover { background-color: var(--green-mid); }
+
+    /* No results */
+    .no-results {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: var(--text-mid);
+    }
+    .no-results a { color: var(--green-dark); font-weight: 700; text-decoration: none; }
+
+    /* Start over */
+    .start-over {
+        text-align: center;
+        margin-top: 2rem;
+    }
+    .start-over a {
+        font-size: 0.9rem;
+        color: var(--text-mid);
+        text-decoration: none;
+    }
+    .start-over a:hover { color: var(--green-dark); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="recipes-page">
+
+    <!-- Top bar -->
+    <div class="top-bar">
+        <a href="{{ url_for('main.concerns') }}" class="back-link">← Back</a>
+        <div class="concern-badge">{{ concern.icon }} {{ concern.name }}</div>
+    </div>
+
+    <!-- Stepper -->
+    <div class="stepper">
+        <div class="step completed">
+            <div class="step-dot"></div>
+            <div class="step-label">Concern</div>
+        </div>
+        <div class="step completed">
+            <div class="step-dot"></div>
+            <div class="step-label">Ingredients</div>
+        </div>
+        <div class="step active">
+            <div class="step-dot"></div>
+            <div class="step-label">Recipes</div>
+        </div>
+        <div class="step">
+            <div class="step-dot"></div>
+            <div class="step-label">Done</div>
+        </div>
+    </div>
+
+    <!-- Heading -->
+    <div class="page-heading">
+        <h1>Recipes for you</h1>
+        <p>Based on your ingredient choices, here's what we suggest.<br>
+        <small>Tap a recipe to see the steps, then choose your favourite.</small></p>
+    </div>
+
+    {% if recipes %}
+        {% for recipe in recipes %}
+        <div class="recipe-card {% if loop.first %}open{% endif %}" id="recipe-{{ recipe.id }}">
+
+            <div class="recipe-header" onclick="toggleRecipe('recipe-{{ recipe.id }}')">
+                <div class="recipe-header-left">
+                    <h3>{{ recipe.name }}</h3>
+                    <div class="recipe-meta">
+                        <span>🕐 {{ recipe.prep_time }} min</span>
+                        <span>👤 2 servings</span>
+                    </div>
+                    <div class="ingredient-pills">
+                        {% for ri in recipe.ingredients %}
+                        <span class="ingredient-pill {% if ri.ingredient_id in selected_ingredient_ids %}matched{% endif %}">
+                            {{ ri.ingredient.type | ingredient_emoji }} {{ ri.ingredient.name }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="toggle-arrow">▾</div>
+            </div>
+
+            <div class="recipe-body">
+                <div class="steps-label">Steps</div>
+                <ul class="steps-list">
+                    {% for step in recipe.instructions.split('|') %}
+                    <li>
+                        <div class="step-num">{{ loop.index }}</div>
+                        <span>{{ step.lstrip('0123456789. ') }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <div class="why-box">
+                    <div class="why-title">🌿 Why this works for you</div>
+                    {{ recipe.description }}
+                </div>
+
+                <button class="make-btn" onclick="madeIt('recipe-{{ recipe.id }}', '{{ recipe.name }}')">
+                    I'll make this! 🔔
+                </button>
+            </div>
+
+        </div>
+        {% endfor %}
+
+    {% else %}
+        <div class="no-results">
+            <p>😕 No recipes found for your selection.</p>
+            <p>Try <a href="{{ url_for('main.concerns') }}">choosing different ingredients</a>.</p>
+        </div>
+    {% endif %}
+
+    <div class="start-over">
+        <a href="{{ url_for('main.concerns') }}">← Start over with a different concern</a>
+    </div>
+
+</div>
+
+<script>
+    function toggleRecipe(id) {
+        const card = document.getElementById(id);
+        card.classList.toggle('open');
+    }
+
+    function madeIt(id, name) {
+        const btn = document.querySelector(`#${id} .make-btn`);
+        btn.textContent = '✅ Added to your favourites!';
+        btn.style.backgroundColor = '#5A8A7A';
+        btn.disabled = true;
+    }
+</script>
+{% endblock %}

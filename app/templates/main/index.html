@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}EaselyWell – Nourish Your Health{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 3rem 1.5rem 4rem;
+        min-height: calc(100vh - 65px);
+    }
+    .hero-circle {
+        width: 280px;
+        height: 280px;
+        border-radius: 50%;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 2.5rem;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+        font-size: 6rem;
+        overflow: hidden;
+    }
+    .hero-circle img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+    .hero h1 {
+        font-size: 3.5rem;
+        font-weight: 900;
+        color: var(--text-dark);
+        margin-bottom: 1rem;
+        line-height: 1.1;
+    }
+    .hero .subtitle {
+        font-size: 1.15rem;
+        color: var(--text-mid);
+        max-width: 420px;
+        line-height: 1.6;
+        margin-bottom: 0.5rem;
+    }
+    .hero .tagline {
+        font-size: 0.95rem;
+        color: var(--text-light, #9AADA7);
+        max-width: 380px;
+        line-height: 1.6;
+        margin-bottom: 2.5rem;
+    }
+    .dot-indicator {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+    .dot {
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background-color: var(--orange-accent);
+    }
+    .dot.inactive { background-color: var(--cream-dark); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-circle">
+        🥑
+    </div>
+
+    <h1>EaselyWell</h1>
+    <p class="subtitle">What would you like support with today?</p>
+    <p class="tagline">Discover nutrients, ingredients, and recipes tailored to your health goals.</p>
+
+    <a href="{{ url_for('main.concerns') }}" class="btn-primary">Choose a health concern</a>
+
+    <div class="dot-indicator">
+        <div class="dot"></div>
+        <div class="dot inactive"></div>
+        <div class="dot inactive"></div>
+    </div>
+</div>
+{% endblock %}

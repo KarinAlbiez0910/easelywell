@@ -1,0 +1,397 @@
+{% extends "base.html" %}
+{% block title %}Pick Ingredients – EaselyWell{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .ingredients-page {
+        max-width: 780px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem 6rem;
+    }
+
+    /* Top bar */
+    .top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+    }
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.9rem;
+        color: var(--text-mid);
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--green-dark); }
+    .concern-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: white;
+        border: 1.5px solid var(--cream-dark);
+        border-radius: 50px;
+        padding: 0.35rem 0.9rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-dark);
+    }
+
+    /* Progress stepper */
+    .stepper {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        margin-bottom: 2.5rem;
+    }
+    .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        position: relative;
+    }
+    .step:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        width: 100%;
+        height: 2px;
+        background-color: var(--cream-dark);
+        z-index: 0;
+    }
+    .step.completed:not(:last-child)::after { background-color: var(--green-dark); }
+    .step-dot {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid var(--cream-dark);
+        background-color: var(--cream);
+        z-index: 1;
+    }
+    .step.completed .step-dot {
+        background-color: var(--green-dark);
+        border-color: var(--green-dark);
+    }
+    .step.active .step-dot {
+        background-color: white;
+        border-color: var(--green-dark);
+        border-width: 3px;
+    }
+    .step-label {
+        font-size: 0.75rem;
+        color: var(--text-light, #9AADA7);
+        margin-top: 0.4rem;
+        font-weight: 600;
+    }
+    .step.active .step-label,
+    .step.completed .step-label { color: var(--green-dark); }
+
+    /* Page heading */
+    .page-heading {
+        text-align: center;
+        margin-bottom: 0.75rem;
+    }
+    .page-heading h1 {
+        font-size: 2.2rem;
+        font-weight: 900;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+    }
+    .page-heading p {
+        font-size: 0.95rem;
+        color: var(--text-mid);
+        line-height: 1.5;
+    }
+
+    /* Validation message */
+    .validation-msg {
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--orange-accent);
+        font-weight: 600;
+        margin: 0.75rem 0 1.5rem;
+        min-height: 1.2rem;
+    }
+
+    /* Ingredient grid */
+    .ingredients-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    @media (max-width: 600px) {
+        .ingredients-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* Ingredient card */
+    .ingredient-card {
+        background: white;
+        border: 2px solid var(--cream-dark);
+        border-radius: 16px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.2s;
+        user-select: none;
+    }
+    .ingredient-card:hover {
+        border-color: var(--green-mid);
+        box-shadow: 0 4px 16px rgba(61,107,94,0.1);
+        transform: translateY(-2px);
+    }
+    .ingredient-card.selected {
+        border-color: var(--green-dark);
+        background-color: #f0f7f5;
+    }
+    .ingredient-card.selected .card-image {
+        opacity: 0.85;
+    }
+
+    .card-image {
+        width: 100%;
+        height: 110px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3.5rem;
+        background-color: var(--cream);
+        position: relative;
+        transition: opacity 0.2s;
+    }
+    .card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .selected-check {
+        display: none;
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        background: var(--green-dark);
+        color: white;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        font-size: 0.75rem;
+        align-items: center;
+        justify-content: center;
+    }
+    .ingredient-card.selected .selected-check { display: flex; }
+
+    .card-body { padding: 0.6rem 0.75rem 0; }
+    .card-name {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        text-align: center;
+    }
+
+    /* Nutrients dropdown */
+    .nutrients-toggle {
+        width: 100%;
+        background: none;
+        border: none;
+        border-top: 1px solid var(--cream-dark);
+        padding: 0.5rem;
+        font-size: 0.78rem;
+        color: var(--text-mid);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        margin-top: 0.5rem;
+        font-family: 'Lato', sans-serif;
+        transition: color 0.2s;
+    }
+    .nutrients-toggle:hover { color: var(--green-dark); }
+    .nutrients-toggle .arrow { transition: transform 0.2s; }
+    .nutrients-toggle.open .arrow { transform: rotate(180deg); }
+
+    .nutrients-dropdown {
+        display: none;
+        padding: 0.5rem 0.75rem 0.75rem;
+        background: #f8faf9;
+        border-top: 1px solid var(--cream-dark);
+    }
+    .nutrients-dropdown.open { display: block; }
+    .nutrient-tag {
+        display: inline-block;
+        background: var(--green-dark);
+        color: white;
+        border-radius: 50px;
+        padding: 0.2rem 0.6rem;
+        font-size: 0.72rem;
+        margin: 0.2rem 0.15rem;
+    }
+
+    /* Floating CTA */
+    .floating-cta {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 100;
+    }
+    .cta-btn {
+        background-color: var(--green-dark);
+        color: white;
+        border: none;
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        font-family: 'Lato', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(61,107,94,0.35);
+        transition: all 0.2s;
+        white-space: nowrap;
+    }
+    .cta-btn:hover { background-color: var(--green-mid); transform: translateY(-1px); }
+    .cta-btn:disabled {
+        background-color: #b5c9c4;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ingredients-page">
+
+    <!-- Top bar -->
+    <div class="top-bar">
+        <a href="{{ url_for('main.concerns') }}" class="back-link">← Back</a>
+        <div class="concern-badge">{{ concern.icon }} {{ concern.name }}</div>
+    </div>
+
+    <!-- Progress stepper -->
+    <div class="stepper">
+        <div class="step completed">
+            <div class="step-dot"></div>
+            <div class="step-label">Concern</div>
+        </div>
+        <div class="step active">
+            <div class="step-dot"></div>
+            <div class="step-label">Ingredients</div>
+        </div>
+        <div class="step">
+            <div class="step-dot"></div>
+            <div class="step-label">Recipes</div>
+        </div>
+        <div class="step">
+            <div class="step-dot"></div>
+            <div class="step-label">Done</div>
+        </div>
+    </div>
+
+    <!-- Heading -->
+    <div class="page-heading">
+        <h1>Pick your ingredients</h1>
+        <p>Choose the ones you enjoy — we'll find recipes that match.<br>
+        <small>Tap an ingredient to select it. Tap "Nutrients" to learn why it helps.</small></p>
+    </div>
+
+    <div class="validation-msg" id="validation-msg">
+        Select at least 1 ingredient to continue
+    </div>
+
+    <!-- Ingredient grid -->
+    <form method="POST" action="{{ url_for('main.recipes') }}" id="ingredients-form">
+        <input type="hidden" name="concern_id" value="{{ concern.id }}">
+
+        <div class="ingredients-grid">
+            {% for ingredient in ingredients %}
+            <div class="ingredient-card" onclick="toggleIngredient(this, {{ ingredient.id }})">
+                <div class="card-image">
+                    {{ ingredient.type | ingredient_emoji }}
+                    <div class="selected-check">✓</div>
+                </div>
+                <div class="card-body">
+                    <div class="card-name">{{ ingredient.name }}</div>
+                </div>
+                <button type="button"
+                        class="nutrients-toggle"
+                        onclick="toggleNutrients(event, this)">
+                    Nutrients <span class="arrow">▾</span>
+                </button>
+                <div class="nutrients-dropdown">
+                    {% for ni in ingredient.nutrients %}
+                    <span class="nutrient-tag">{{ ni.nutrient.name }}</span>
+                    {% endfor %}
+                </div>
+                <input type="checkbox"
+                       name="ingredient_ids"
+                       value="{{ ingredient.id }}"
+                       style="display:none"
+                       class="ingredient-checkbox">
+            </div>
+            {% endfor %}
+        </div>
+
+    </form>
+</div>
+
+<!-- Floating CTA -->
+<div class="floating-cta">
+    <button class="cta-btn" id="cta-btn" disabled onclick="submitIngredients()">
+        See recipes (0 selected) →
+    </button>
+</div>
+
+<script>
+    let selectedCount = 0;
+
+    function toggleIngredient(card, id) {
+        const checkbox = card.querySelector('.ingredient-checkbox');
+        const isSelected = card.classList.contains('selected');
+
+        if (isSelected) {
+            card.classList.remove('selected');
+            checkbox.checked = false;
+            selectedCount--;
+        } else {
+            card.classList.add('selected');
+            checkbox.checked = true;
+            selectedCount++;
+        }
+
+        updateCTA();
+    }
+
+    function updateCTA() {
+        const btn = document.getElementById('cta-btn');
+        const msg = document.getElementById('validation-msg');
+
+        btn.textContent = `See recipes (${selectedCount} selected) →`;
+
+        if (selectedCount > 0) {
+            btn.disabled = false;
+            msg.textContent = '';
+        } else {
+            btn.disabled = true;
+            msg.textContent = 'Select at least 1 ingredient to continue';
+        }
+    }
+
+    function toggleNutrients(event, btn) {
+        event.stopPropagation();
+        const dropdown = btn.nextElementSibling;
+        const isOpen = dropdown.classList.contains('open');
+        dropdown.classList.toggle('open', !isOpen);
+        btn.classList.toggle('open', !isOpen);
+    }
+
+    function submitIngredients() {
+        if (selectedCount > 0) {
+            document.getElementById('ingredients-form').submit();
+        }
+    }
+</script>
+{% endblock %}
