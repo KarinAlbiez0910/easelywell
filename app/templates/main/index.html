@@ -64,6 +64,14 @@
         background-color: var(--orange-accent);
     }
     .dot.inactive { background-color: var(--cream-dark); }
+    .disclaimer {
+    font-size: 0.82rem;
+    color: var(--text-light, #9AADA7);
+    max-width: 380px;
+    text-align: center;
+    line-height: 1.6;
+    margin-top: 1.5rem;
+}
 </style>
 {% endblock %}
 
@@ -78,7 +86,11 @@
     <p class="tagline">Discover nutrients, ingredients, and recipes tailored to your health goals.</p>
 
     <a href="{{ url_for('main.concerns') }}" class="btn-primary">Choose a health concern</a>
-
+    <p class="disclaimer">
+    🌿 We're here to nourish, not diagnose. EaselyWell offers food inspiration
+    based on general wellness knowledge. For anything medical, please reach out
+    to a healthcare professional you trust.
+    </p>
     <div class="dot-indicator">
         <div class="dot"></div>
         <div class="dot inactive"></div>

@@ -259,6 +259,16 @@
         text-decoration: none;
     }
     .start-over a:hover { color: var(--green-dark); }
+    .disclaimer-box {
+    background: #f0f7f5;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    font-size: 0.82rem;
+    color: var(--text-mid);
+    line-height: 1.6;
+    text-align: center;
+    margin-top: 2rem;
+}
 </style>
 {% endblock %}
 
@@ -364,7 +374,11 @@
     <div class="start-over">
         <a href="{{ url_for('main.concerns') }}">← Start over with a different concern</a>
     </div>
-
+<div class="disclaimer-box">
+    🌿 We're here to nourish, not diagnose. EaselyWell offers food inspiration
+    based on general wellness knowledge. For anything medical, please reach out
+    to a healthcare professional you trust.
+</div>
 </div>
 
 <script>
