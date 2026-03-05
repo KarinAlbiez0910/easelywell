@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block title %}Analytics – EaselyWell{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .analytics-page {
+        max-width: 780px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem 4rem;
+    }
+    .analytics-page h1 {
+        font-size: 2rem;
+        font-weight: 900;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+    }
+    .analytics-page .subtitle {
+        font-size: 0.95rem;
+        color: var(--text-mid);
+        margin-bottom: 2rem;
+    }
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    @media (max-width: 600px) {
+        .stats-grid { grid-template-columns: repeat(1, 1fr); }
+    }
+    .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .stat-number {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: 900;
+        color: var(--green-dark);
+        margin-bottom: 0.3rem;
+    }
+    .stat-label {
+        font-size: 0.85rem;
+        color: var(--text-mid);
+        font-weight: 600;
+    }
+    .section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin: 2rem 0 1rem;
+    }
+    .table {
+        width: 100%;
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        margin-bottom: 2rem;
+    }
+    .table-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0.85rem 1.5rem;
+    border-bottom: 1px solid var(--cream-dark);
+    font-size: 0.9rem;
+    gap: 1rem;
+}
+.table-row .label {
+    flex: 1 !important;
+    color: var(--text-dark);
+    font-weight: 600;
+}
+.table-row .count {
+    color: var(--green-dark);
+    font-size: 0.85rem;
+    font-weight: 700;
+    min-width: 60px;
+    text-align: right !important;
+    flex-shrink: 0 !important;
+}
+
+.feedback-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.85rem 1.5rem;
+    border-bottom: 1px solid var(--cream-dark);
+    font-size: 0.88rem;
+    color: var(--text-dark);
+    gap: 1rem;
+}
+.feedback-row:last-child { border-bottom: none; }
+.feedback-row span { flex: 1; }
+.feedback-row span:nth-child(2) { flex: 0; text-align: center; }
+
+    .rating-yes { color: #27ae60; font-weight: 700; }
+    .rating-somewhat { color: #f39c12; font-weight: 700; }
+    .rating-no { color: #c0392b; font-weight: 700; }
+    .empty { text-align: center; padding: 2rem; color: var(--text-mid); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="analytics-page">
+    <h1>📊 Analytics</h1>
+    <p class="subtitle">A simple overview of how EaselyWell is being used.</p>
+
+    <!-- Top stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">{{ total_users }}</div>
+            <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ total_concerns }}</div>
+            <div class="stat-label">Concerns Selected</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ total_feedback }}</div>
+            <div class="stat-label">Feedback Submitted</div>
+        </div>
+    </div>
+
+    <!-- Top concerns -->
+    <div class="section-title">🔥 Most selected health concerns</div>
+    <div class="table">
+        {% if top_concerns %}
+            {% for concern, count in top_concerns %}
+            <div class="table-row">
+                <span class="label">{{ concern.icon }} {{ concern.name }}</span>
+                <span class="count">{{ count }}</span>
+            </div>
+            
+            {% endfor %}
+        {% else %}
+            <div class="empty">No data yet</div>
+        {% endif %}
+    </div>
+
+    <!-- Top recipes -->
+    <div class="section-title">👀 Most viewed recipes</div>
+    <div class="table">
+        {% if top_recipes %}
+            {% for recipe, count in top_recipes %}
+            <div class="table-row">
+                <span class="label">{{ recipe.name }}</span>
+                <span class="count">{{ count }}</span>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty">No data yet</div>
+        {% endif %}
+    </div>
+
+    <!-- Feedback summary -->
+    <div class="section-title">💬 Feedback summary</div>
+    <div class="table">
+        <div class="table-row">
+            <span class="label">👍 Yes, helpful</span>
+            <span class="count rating-yes">{{ feedback_yes }}</span>
+        </div>
+        <div class="table-row">
+            <span class="label">🤔 Somewhat helpful</span>
+            <span class="count rating-somewhat">{{ feedback_somewhat }}</span>
+        </div>
+        <div class="table-row">
+            <span class="label">👎 Not really helpful</span>
+            <span class="count rating-no">{{ feedback_no }}</span>
+        </div>
+    </div>
+
+    <!-- Recent comments -->
+    <div class="section-title">📝 Recent comments</div>
+    <div class="table">
+        {% if recent_comments %}
+            {% for fb in recent_comments %}
+            <div class="feedback-row">
+                <span>{{ fb.recipe.name if fb.recipe else '—' }}</span>
+                <span class="rating-{{ fb.rating }}">
+                    {% if fb.rating == 'yes' %}👍{% elif fb.rating == 'somewhat' %}🤔{% else %}👎{% endif %}
+                </span>
+                <span style="color:var(--text-mid); max-width:250px;">{{ fb.comment or '—' }}</span>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty">No comments yet</div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

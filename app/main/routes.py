@@ -9,6 +9,21 @@ from app.models import (
     UserFavouriteRecipe
 )
 
+def track_event(event_type, concern_id=None, recipe_id=None, meta=None):
+    from app.models import Event
+    try:
+        event = Event(
+            event_type=event_type,
+            user_id=current_user.id if current_user.is_authenticated else None,
+            concern_id=concern_id,
+            recipe_id=recipe_id,
+            meta=meta
+        )
+        db.session.add(event)
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+
 
 @bp.route('/')
 def index():
@@ -53,6 +68,7 @@ def ingredients(concern_id):
     # Flexitarian, No restrictions, and everything else → show all
 
     ingredients = query.all()
+    track_event('concern_selected', concern_id=concern_id)
 
     return render_template('main/ingredients.html',
                            concern=concern,
@@ -63,6 +79,7 @@ def ingredients(concern_id):
 @bp.route('/recipes', methods=['POST'])
 @login_required
 def recipes():
+    from app.models import UserFavouriteRecipe, Feedback
     concern_id = request.form.get('concern_id', type=int)
     ingredient_ids = request.form.getlist('ingredient_ids', type=int)
     concern = HealthConcern.query.get_or_404(concern_id)
@@ -76,13 +93,9 @@ def recipes():
         recipe_scores[ri.recipe_id] = recipe_scores.get(ri.recipe_id, 0) + 1
 
     top_ids = sorted(recipe_scores, key=recipe_scores.get, reverse=True)[:3]
-
-    # Base query
     query = Recipe.query.filter(Recipe.id.in_(top_ids))
 
-    # Filter recipes by dietary preference
     preference = current_user.dietary_preference
-
     if preference == 'Vegan':
         query = query.filter(Recipe.is_vegan == True)
     elif preference == 'Vegetarian':
@@ -94,7 +107,6 @@ def recipes():
                 Recipe.is_vegan == True
             )
         )
-        # Also include fish recipes by checking recipe ingredients
         fish_recipes = db.session.query(Recipe.id).join(
             RecipeIngredient
         ).join(Ingredient).filter(
@@ -116,11 +128,20 @@ def recipes():
     saved = UserFavouriteRecipe.query.filter_by(user_id=current_user.id).all()
     saved_recipe_ids = [f.recipe_id for f in saved]
 
+    # Check if user already gave feedback for this concern
+    feedback_given_ids = [f.recipe_id for f in Feedback.query.filter_by(
+    user_id=current_user.id
+    ).all()]
+
+    for recipe in recipes:
+        track_event('recipe_viewed', concern_id=concern_id, recipe_id=recipe.id)
+
     return render_template('main/recipes.html',
-                           concern=concern,
-                           recipes=recipes,
-                           selected_ingredient_ids=ingredient_ids,
-                           saved_recipe_ids=saved_recipe_ids)
+                       concern=concern,
+                       recipes=recipes,
+                       selected_ingredient_ids=ingredient_ids,
+                       saved_recipe_ids=saved_recipe_ids,
+                       feedback_given_ids=feedback_given_ids)
 
 
 @bp.route('/favourite/<int:recipe_id>', methods=['POST'])
@@ -143,3 +164,87 @@ def toggle_favourite(recipe_id):
         flash(f'"{recipe.name}" saved to favourites! 🌿', 'success')
 
     return redirect(url_for('auth.profile'))
+
+@bp.route('/feedback/<int:recipe_id>', methods=['POST'])
+@login_required
+def feedback(recipe_id):
+    from app.models import Feedback
+    rating = request.form.get('rating')
+    comment = request.form.get('comment', '').strip()
+
+    if rating in ['yes', 'somewhat', 'no']:
+        existing = Feedback.query.filter_by(
+            user_id=current_user.id,
+            recipe_id=recipe_id
+        ).first()
+        if not existing:
+            fb = Feedback(
+                user_id=current_user.id,
+                recipe_id=recipe_id,
+                rating=rating,
+                comment=comment or None
+            )
+            db.session.add(fb)
+            db.session.commit()
+            track_event('feedback_submitted',
+                       recipe_id=recipe_id,
+                       meta=rating)
+        flash('Thank you for your feedback! 🌿', 'success')
+
+    return redirect(url_for('main.concerns'))
+@bp.route('/analytics')
+@login_required
+def analytics():
+    from app.models import Event, Feedback
+    from sqlalchemy import func
+
+    # Total users
+    from app.models import User
+    total_users = User.query.count()
+
+    # Total concerns selected
+    total_concerns = Event.query.filter_by(event_type='concern_selected').count()
+
+    # Total feedback
+    total_feedback = Feedback.query.count()
+
+    # Top concerns
+    top_concerns = db.session.query(
+        HealthConcern,
+        func.count(Event.id).label('count')
+    ).join(Event, Event.concern_id == HealthConcern.id)\
+     .filter(Event.event_type == 'concern_selected')\
+     .group_by(HealthConcern.id)\
+     .order_by(func.count(Event.id).desc())\
+     .limit(10).all()
+
+    # Top recipes viewed
+    top_recipes = db.session.query(
+        Recipe,
+        func.count(Event.id).label('count')
+    ).join(Event, Event.recipe_id == Recipe.id)\
+     .filter(Event.event_type == 'recipe_viewed')\
+     .group_by(Recipe.id)\
+     .order_by(func.count(Event.id).desc())\
+     .limit(10).all()
+
+    # Feedback breakdown
+    feedback_yes      = Feedback.query.filter_by(rating='yes').count()
+    feedback_somewhat = Feedback.query.filter_by(rating='somewhat').count()
+    feedback_no       = Feedback.query.filter_by(rating='no').count()
+
+    # Recent comments
+    recent_comments = Feedback.query.filter(
+        Feedback.comment != None
+    ).order_by(Feedback.created_at.desc()).limit(10).all()
+
+    return render_template('main/analytics.html',
+                           total_users=total_users,
+                           total_concerns=total_concerns,
+                           total_feedback=total_feedback,
+                           top_concerns=top_concerns,
+                           top_recipes=top_recipes,
+                           feedback_yes=feedback_yes,
+                           feedback_somewhat=feedback_somewhat,
+                           feedback_no=feedback_no,
+                           recent_comments=recent_comments)

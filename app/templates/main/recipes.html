@@ -269,6 +269,86 @@
     text-align: center;
     margin-top: 2rem;
 }
+/* Feedback box */
+.feedback-box {
+    background: white;
+    border: 1.5px solid var(--cream-dark);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    text-align: center;
+}
+.feedback-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.3rem;
+}
+.feedback-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    margin-bottom: 1.25rem;
+}
+.feedback-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+.feedback-btn {
+    background: white;
+    border: 1.5px solid var(--cream-dark);
+    border-radius: 50px;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.9rem;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-dark);
+}
+.feedback-btn:hover {
+    border-color: var(--green-mid);
+    color: var(--green-dark);
+}
+.feedback-btn.selected {
+    background-color: var(--green-dark);
+    border-color: var(--green-dark);
+    color: white;
+}
+.feedback-comment {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+.feedback-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--cream-dark);
+    border-radius: 10px;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.feedback-input:focus { border-color: var(--green-mid); }
+.feedback-submit {
+    padding: 0.75rem;
+    width: 100%;
+}
+.feedback-done {
+    font-size: 0.95rem;
+    color: var(--green-dark);
+    font-weight: 600;
+}
+
+@media (max-width: 600px) {
+    .feedback-buttons { gap: 0.5rem; }
+    .feedback-btn { padding: 0.5rem 1rem; font-size: 0.85rem; }
+}
 </style>
 {% endblock %}
 
@@ -347,17 +427,53 @@
                 </div>
 
                 <form method="POST" action="{{ url_for('main.toggle_favourite', recipe_id=recipe.id) }}">
-                    {% set is_saved = current_user.is_authenticated and recipe.id in saved_recipe_ids %}
-                    {% if is_saved %}
-                        <button type="submit" class="make-btn unsave-btn">
-                            ✅ Saved &nbsp;·&nbsp; Click to unsave
-                        </button>
-                    {% else %}
-                        <button type="submit" class="make-btn">
-                            I'll make this! 🔔
-                        </button>
-                    {% endif %}
-                </form>
+    {% set is_saved = current_user.is_authenticated and recipe.id in saved_recipe_ids %}
+    {% if is_saved %}
+        <button type="submit" class="make-btn unsave-btn">
+            ✅ Saved &nbsp;·&nbsp; Click to unsave
+        </button>
+    {% else %}
+        <button type="submit" class="make-btn">
+            I'll make this! 🔔
+        </button>
+    {% endif %}
+</form>
+
+<!-- Per-recipe feedback -->
+{% if recipe.id in feedback_given_ids %}
+<div class="feedback-done">
+    ✅ Thanks for your feedback on this recipe!
+</div>
+{% else %}
+<div class="feedback-box">
+    <div class="feedback-title">Was this recipe helpful?</div>
+    <form method="POST" action="{{ url_for('main.feedback', recipe_id=recipe.id) }}">
+        <input type="hidden" name="rating" id="rating-input-{{ recipe.id }}" value="">
+        <div class="feedback-buttons">
+            <button type="button" class="feedback-btn" onclick="selectRating('yes', this, {{ recipe.id }})">
+                👍 Yes
+            </button>
+            <button type="button" class="feedback-btn" onclick="selectRating('somewhat', this, {{ recipe.id }})">
+                🤔 Somewhat
+            </button>
+            <button type="button" class="feedback-btn" onclick="selectRating('no', this, {{ recipe.id }})">
+                👎 Not really
+            </button>
+        </div>
+        <div class="feedback-comment" id="feedback-comment-{{ recipe.id }}" style="display:none;">
+            <input
+                type="text"
+                name="comment"
+                placeholder="Anything you'd like to share? (optional)"
+                class="feedback-input"
+            >
+            <button type="submit" class="btn-primary feedback-submit">
+                Send feedback
+            </button>
+        </div>
+    </form>
+</div>
+{% endif %}
 
             </div>
 
@@ -374,11 +490,11 @@
     <div class="start-over">
         <a href="{{ url_for('main.concerns') }}">← Start over with a different concern</a>
     </div>
-<div class="disclaimer-box">
-    🌿 We're here to nourish, not diagnose. EaselyWell offers food inspiration
-    based on general wellness knowledge. For anything medical, please reach out
-    to a healthcare professional you trust.
-</div>
+    <div class="disclaimer-box">
+        🌿 We're here to nourish, not diagnose. EaselyWell offers food inspiration
+        based on general wellness knowledge. For anything medical, please reach out
+        to a healthcare professional you trust.
+    </div>
 </div>
 
 <script>
@@ -386,5 +502,14 @@
         const card = document.getElementById(id);
         card.classList.toggle('open');
     }
+    function selectRating(value, btn, recipeId) {
+    // Highlight selected button within this recipe's feedback box
+    btn.closest('.feedback-buttons').querySelectorAll('.feedback-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    // Set hidden input for this specific recipe
+    document.getElementById(`rating-input-${recipeId}`).value = value;
+    // Show comment box for this recipe
+    document.getElementById(`feedback-comment-${recipeId}`).style.display = 'flex';
+}
 </script>
 {% endblock %}

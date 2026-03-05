@@ -138,3 +138,30 @@ class UserFavouriteRecipe(db.Model):
 
     user = db.relationship('User', backref='favourites')
     recipe = db.relationship('Recipe', backref='saved_by')
+class Feedback(db.Model):
+    __tablename__ = 'feedback'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=True)
+    rating = db.Column(db.String(20), nullable=False)  # 'yes', 'somewhat', 'no'
+    comment = db.Column(db.Text, nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', backref='feedback')
+    recipe = db.relationship('Recipe', backref='feedback')
+
+class Event(db.Model):
+    __tablename__ = 'event'
+
+    id = db.Column(db.Integer, primary_key=True)
+    event_type = db.Column(db.String(50), nullable=False)  # concern_selected, recipe_viewed, feedback_submitted
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    concern_id = db.Column(db.Integer, db.ForeignKey('health_concern.id'), nullable=True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=True)
+    meta = db.Column(db.String(255), nullable=True)  # any extra info
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', backref='events')
+    concern = db.relationship('HealthConcern', backref='events')
+    recipe = db.relationship('Recipe', backref='events')
