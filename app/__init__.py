@@ -10,21 +10,23 @@ login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 login_manager.login_message_category = 'info'
 
+
 def ingredient_emoji(type):
     emojis = {
         'vegetable': '🥦',
-        'fruit':     '🫐',
-        'legume':    '🫘',
+        'fruit':     '🍓',
+        'legume':    '🥜',
         'fish':      '🐟',
         'meat':      '🥩',
         'dairy':     '🥛',
         'grain':     '🌾',
-        'nut':       '🥜',
+        'nut':       '🌰',
         'seed':      '🌱',
         'spice':     '🌿',
         'herb':      '🍃',
-        'oil':       '🫒',
+        'oil':       '🍶',
         'other':     '🍫',
+        'protein':   '🥚',
     }
     return emojis.get(type, '🥗')
 
