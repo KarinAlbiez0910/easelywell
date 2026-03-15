@@ -1,0 +1,41 @@
+# Secrets - NEVER include these
+.env
+.env.*
+*.pem
+*.key
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Version control
+.git/
+.gitignore
+
+# Dev/editor files
+.vscode/
+.idea/
+*.swp
+
+# Test files
+tests/
+pytest.ini
+.coverage
+
+# Docker files themselves (not needed inside image)
+docker-compose*.yml
+Dockerfile*
+
+# Logs
+*.log

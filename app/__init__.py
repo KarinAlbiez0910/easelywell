@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
@@ -48,5 +48,20 @@ def create_app():
 
     # Register template filter
     app.jinja_env.filters['ingredient_emoji'] = ingredient_emoji
+
+    # Health endpoint
+    @app.route('/health')
+    def health():
+        try:
+            db.session.execute(db.text('SELECT 1'))
+            db_status = 'ok'
+        except Exception as e:
+            db_status = f'error: {str(e)}'
+
+        status = 'ok' if db_status == 'ok' else 'degraded'
+        return jsonify({
+            'status': status,
+            'database': db_status
+        }), 200 if status == 'ok' else 503
 
     return app

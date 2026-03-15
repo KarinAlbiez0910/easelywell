@@ -1,0 +1,31 @@
+version: "3.3"
+
+services:
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: easelyadmin
+      POSTGRES_PASSWORD: easely123
+      POSTGRES_DB: easelywell
+      POSTGRES_HOST_AUTH_METHOD: md5
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      DATABASE_URL: postgresql://easelyadmin:easely123@db:5432/easelywell
+      FLASK_ENV: production
+      SECRET_KEY: dev-secret-key-local
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
