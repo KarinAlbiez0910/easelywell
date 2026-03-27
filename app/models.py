@@ -68,6 +68,13 @@ class Ingredient(db.Model):
     type = db.Column(db.String(100))            # e.g. vegetable, protein
     is_vegan = db.Column(db.Boolean, default=True)
     is_vegetarian = db.Column(db.Boolean, default=True)
+    is_gluten_free = db.Column(db.Boolean, nullable=True, default=False)
+    is_dairy_free = db.Column(db.Boolean, nullable=True, default=False)
+    is_nut_free = db.Column(db.Boolean, nullable=True, default=False)
+    is_egg_free = db.Column(db.Boolean, nullable=True, default=False)
+    is_low_sugar = db.Column(db.Boolean, nullable=True, default=False)
+    is_high_protein = db.Column(db.Boolean, nullable=True, default=False)
+    is_mediterranean = db.Column(db.Boolean, nullable=True, default=False)
     image_url = db.Column(db.String(255))
 
     nutrients = db.relationship('NutrientIngredient', back_populates='ingredient')
@@ -109,6 +116,13 @@ class Recipe(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     is_vegan = db.Column(db.Boolean, default=True)
     is_vegetarian = db.Column(db.Boolean, default=True)
+    is_gluten_free = db.Column(db.Boolean, nullable=True, default=False)
+    is_dairy_free = db.Column(db.Boolean, nullable=True, default=False)
+    is_nut_free = db.Column(db.Boolean, nullable=True, default=False)
+    is_egg_free = db.Column(db.Boolean, nullable=True, default=False)
+    is_low_sugar = db.Column(db.Boolean, nullable=True, default=False)
+    is_high_protein = db.Column(db.Boolean, nullable=True, default=False)
+    is_mediterranean = db.Column(db.Boolean, nullable=True, default=False)
     prep_time = db.Column(db.Integer)           # in minutes
 
     ingredients = db.relationship('RecipeIngredient', back_populates='recipe')

@@ -385,9 +385,8 @@
                 <div class="pill-group">
                     {% set diets = [
                         'No restrictions', 'Vegan', 'Vegetarian', 'Pescatarian',
-                        'Flexitarian', 'Keto', 'Paleo', 'Gluten-free',
-                        'Dairy-free', 'Halal', 'Kosher', 'Low FODMAP',
-                        'Mediterranean', 'Low carb', 'Low sugar', 'Whole foods'
+                        'Gluten-free', 'Dairy-free', 'Nut-free', 'Egg-free',
+                        'Low sugar', 'High protein', 'Mediterranean'
                     ] %}
                     {% for d in diets %}
                     <div class="pill {% if current_user.dietary_preference == d %}selected{% endif %}"

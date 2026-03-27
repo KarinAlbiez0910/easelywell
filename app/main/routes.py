@@ -69,6 +69,20 @@ def ingredients(concern_id):
                 Ingredient.type == 'fish'
             )
         )
+    elif preference == 'Gluten-free':
+        query = query.filter(Ingredient.is_gluten_free == True)
+    elif preference == 'Dairy-free':
+        query = query.filter(Ingredient.is_dairy_free == True)
+    elif preference == 'Nut-free':
+        query = query.filter(Ingredient.is_nut_free == True)
+    elif preference == 'Egg-free':
+        query = query.filter(Ingredient.is_egg_free == True)
+    elif preference == 'Low sugar':
+        query = query.filter(Ingredient.is_low_sugar == True)
+    elif preference == 'High protein':
+        query = query.filter(Ingredient.is_high_protein == True)
+    elif preference == 'Mediterranean':
+        query = query.filter(Ingredient.is_mediterranean == True)
     # Flexitarian, No restrictions, and everything else → show all
 
     ingredients = query.all()
@@ -125,6 +139,20 @@ def recipes():
                     Recipe.id.in_(fish_recipe_ids)
                 )
             )
+    elif preference == 'Gluten-free':
+        query = query.filter(Recipe.is_gluten_free == True)
+    elif preference == 'Dairy-free':
+        query = query.filter(Recipe.is_dairy_free == True)
+    elif preference == 'Nut-free':
+        query = query.filter(Recipe.is_nut_free == True)
+    elif preference == 'Egg-free':
+        query = query.filter(Recipe.is_egg_free == True)
+    elif preference == 'Low sugar':
+        query = query.filter(Recipe.is_low_sugar == True)
+    elif preference == 'High protein':
+        query = query.filter(Recipe.is_high_protein == True)
+    elif preference == 'Mediterranean':
+        query = query.filter(Recipe.is_mediterranean == True)
 
     recipes = query.all()
     recipes = sorted(recipes, key=lambda r: recipe_scores.get(r.id, 0), reverse=True)
