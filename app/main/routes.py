@@ -1,4 +1,7 @@
-from flask import render_template, request, redirect, url_for, flash
+
+import requests
+import json
+from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from app.main import bp
 from app import db
@@ -8,6 +11,7 @@ from app.models import (
     Recipe, RecipeIngredient,
     UserFavouriteRecipe
 )
+N8N_WEBHOOK_URL = "https://ai-software-egnineering.app.n8n.cloud/webhook/easelywell-classifier"
 
 def track_event(event_type, concern_id=None, recipe_id=None, meta=None):
     from app.models import Event
@@ -248,3 +252,46 @@ def analytics():
                            feedback_somewhat=feedback_somewhat,
                            feedback_no=feedback_no,
                            recent_comments=recent_comments)
+
+
+
+
+@bp.route('/api/classify', methods=['POST'])
+def classify():
+    data = request.get_json()
+    try:
+        response = requests.post(
+            N8N_WEBHOOK_URL,
+            json={"message": data.get("message", "")},
+            timeout=10
+        )
+        raw_text = response.text
+        if raw_text.startswith('='):
+            raw_text = raw_text[1:]
+        raw = json.loads(raw_text)
+        reply_text = raw.get("reply", "{}")
+        import re
+        reply_text = re.sub(r'```json\n|```', '', reply_text).strip()
+        inner = json.loads(reply_text)
+        concern = inner.get("concern", "unknown")
+
+        replies = {
+            "iron_deficiency": "Iron levels - redirecting you now",
+            "high_cholesterol": "Cholesterol support - redirecting you now",
+            "high_blood_pressure": "Blood pressure support - redirecting you now",
+            "vitamin_d_deficiency": "Vitamin D support - redirecting you now",
+            "gut_health": "Gut health support - redirecting you now",
+            "low_energy_fatigue": "Energy support - redirecting you now",
+            "bone_health": "Bone health support - redirecting you now",
+            "anxiety_stress": "Stress support - redirecting you now",
+            "chronic_inflammation": "Inflammation support - redirecting you now",
+            "immune_support": "Immune support - redirecting you now",
+            "unknown": "Could you tell me more about how you feel?"
+        }
+
+        reply = replies.get(concern, replies["unknown"])
+        return jsonify({"reply": reply, "concern_slug": concern})
+
+    except Exception as e:
+        print(f"DEBUG Error: {str(e)}")
+        return jsonify({"reply": "Sorry, I could not connect right now!"}), 500
