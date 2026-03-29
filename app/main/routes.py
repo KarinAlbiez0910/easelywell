@@ -283,6 +283,70 @@ def analytics():
                            recent_comments=recent_comments)
 
 
+@bp.route('/analytics/explain', methods=['POST'])
+@login_required
+def analytics_explain():
+    import os
+    from openai import OpenAI
+    from app.models import Event, Feedback, User
+    from sqlalchemy import func
+
+    total_users = User.query.count()
+    total_concerns = Event.query.filter_by(event_type='concern_selected').count()
+    total_feedback = Feedback.query.count()
+
+    top_concerns = db.session.query(
+        HealthConcern, func.count(Event.id).label('count')
+    ).join(Event, Event.concern_id == HealthConcern.id)\
+     .filter(Event.event_type == 'concern_selected')\
+     .group_by(HealthConcern.id)\
+     .order_by(func.count(Event.id).desc())\
+     .limit(5).all()
+
+    top_recipes = db.session.query(
+        Recipe, func.count(Event.id).label('count')
+    ).join(Event, Event.recipe_id == Recipe.id)\
+     .filter(Event.event_type == 'recipe_viewed')\
+     .group_by(Recipe.id)\
+     .order_by(func.count(Event.id).desc())\
+     .limit(5).all()
+
+    feedback_yes      = Feedback.query.filter_by(rating='yes').count()
+    feedback_somewhat = Feedback.query.filter_by(rating='somewhat').count()
+    feedback_no       = Feedback.query.filter_by(rating='no').count()
+
+    context = {
+        "total_users": total_users,
+        "total_concerns_selected": total_concerns,
+        "total_feedback": total_feedback,
+        "feedback_breakdown": {
+            "helpful": feedback_yes,
+            "somewhat": feedback_somewhat,
+            "not_helpful": feedback_no
+        },
+        "top_health_concerns": [
+            {"name": c.name, "selections": n} for c, n in top_concerns
+        ],
+        "top_recipes_viewed": [
+            {"name": r.name, "views": n} for r, n in top_recipes
+        ]
+    }
+
+    prompt = f"""You are a calm, supportive advisor helping a wellness founder understand their app analytics.
+
+Here is the aggregated usage data for EaselyWell, a personalized nutrition guidance app:
+
+{context}
+
+Please provide 3 to 5 plain-language, actionable insights based on this data. Focus on what is working, what could be improved, and what the founder might want to try next. Keep the tone warm, honest, and founder-friendly. No bullet point headers needed — just clear, flowing observations."""
+
+    client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    return {"insight": response.choices[0].message.content}
 
 
 @bp.route('/api/classify', methods=['POST'])

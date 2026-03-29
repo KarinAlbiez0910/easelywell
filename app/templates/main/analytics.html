@@ -103,6 +103,30 @@
     .rating-somewhat { color: #f39c12; font-weight: 700; }
     .rating-no { color: #c0392b; font-weight: 700; }
     .empty { text-align: center; padding: 2rem; color: var(--text-mid); }
+    .explain-btn {
+        display: block;
+        margin: 0 auto 2rem;
+        padding: 0.75rem 2rem;
+        background: var(--green-dark);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+    }
+    .explain-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .insight-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem 2rem;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        margin-bottom: 2rem;
+        line-height: 1.7;
+        color: var(--text-dark);
+        font-size: 0.93rem;
+        display: none;
+    }
 </style>
 {% endblock %}
 
@@ -193,5 +217,33 @@
         {% endif %}
     </div>
 
+    <button class="explain-btn" id="explainBtn" onclick="explainData()">
+        ✨ Explain my data
+    </button>
+    <div class="insight-card" id="insightCard"></div>
+
 </div>
+
+<script>
+async function explainData() {
+    const btn = document.getElementById('explainBtn');
+    const card = document.getElementById('insightCard');
+    btn.disabled = true;
+    btn.textContent = 'Thinking…';
+    card.style.display = 'none';
+    try {
+        const res = await fetch('/analytics/explain', { method: 'POST' });
+        if (!res.ok) throw new Error('Request failed');
+        const data = await res.json();
+        card.textContent = data.insight;
+        card.style.display = 'block';
+    } catch (e) {
+        card.textContent = 'Something went wrong. Please try again.';
+        card.style.display = 'block';
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '✨ Explain my data';
+    }
+}
+</script>
 {% endblock %}
