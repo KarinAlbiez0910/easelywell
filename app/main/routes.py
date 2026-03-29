@@ -57,6 +57,7 @@ def ingredients(concern_id):
 
     # Filter by dietary preference
     preference = current_user.dietary_preference
+    print(f"DEBUG preference='{preference}'")
 
     if preference == 'Vegan':
         query = query.filter(Ingredient.is_vegan == True)
