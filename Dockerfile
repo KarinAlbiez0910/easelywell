@@ -36,4 +36,4 @@ EXPOSE 5000
 
 # Run with gunicorn in production mode
 # Replace "app:app" with your actual module:app_instance if different
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "--threads", "1", "--timeout", "120", "run:app"]
+CMD gunicorn --bind 0.0.0.0:${PORT:-5000} --workers 1 --threads 1 --timeout 120 run:app
