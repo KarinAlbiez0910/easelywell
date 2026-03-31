@@ -388,3 +388,31 @@ def classify():
     except Exception as e:
         print(f"DEBUG Error: {str(e)}")
         return jsonify({"reply": "Sorry, I could not connect right now!"}), 500
+
+
+@bp.route('/api/explain/nutrient/<int:nutrient_id>')
+@login_required
+def explain_nutrient(nutrient_id):
+    import os
+    from openai import OpenAI
+    from app.models import Nutrient, HealthConcern
+    concern_id = request.args.get('concern_id', type=int)
+    nutrient = Nutrient.query.get_or_404(nutrient_id)
+    concern = HealthConcern.query.get_or_404(concern_id) if concern_id else None
+
+    concern_name = concern.name if concern else "general wellness"
+    client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{
+            "role": "user",
+            "content": (
+                f"In 2-3 sentences explain why {nutrient.name} helps with "
+                f"{concern_name} in calm, supportive, non-medical, wellness-focused "
+                f"language. No diagnosis, no medical claims."
+            )
+        }],
+        max_tokens=120,
+    )
+    explanation = response.choices[0].message.content.strip()
+    return jsonify({"explanation": explanation})
