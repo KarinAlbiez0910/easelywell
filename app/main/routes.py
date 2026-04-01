@@ -12,6 +12,7 @@ from app.models import (
     UserFavouriteRecipe
 )
 N8N_WEBHOOK_URL = "https://ai-software-egnineering.app.n8n.cloud/webhook/easelywell-classifier"
+_nutrient_explanation_cache = {}
 
 def track_event(event_type, concern_id=None, recipe_id=None, meta=None):
     from app.models import Event
@@ -416,3 +417,37 @@ def explain_nutrient(nutrient_id):
     )
     explanation = response.choices[0].message.content.strip()
     return jsonify({"explanation": explanation})
+
+
+@bp.route('/nutrients/<int:nutrient_id>')
+@login_required
+def nutrient_detail(nutrient_id):
+    import os
+    from openai import OpenAI
+    from app.models import Nutrient, NutrientIngredient
+    nutrient = Nutrient.query.get_or_404(nutrient_id)
+
+    ingredient_links = NutrientIngredient.query.filter_by(nutrient_id=nutrient_id).all()
+    ingredients = [link.ingredient for link in ingredient_links]
+
+    if nutrient_id not in _nutrient_explanation_cache:
+        client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{
+                "role": "user",
+                "content": (
+                    f"In 3-4 sentences explain what {nutrient.name} does for general "
+                    f"health and wellness in calm, supportive, non-medical language. "
+                    f"No diagnosis, no medical claims, no dosage advice."
+                )
+            }],
+            max_tokens=160,
+        )
+        _nutrient_explanation_cache[nutrient_id] = response.choices[0].message.content.strip()
+
+    explanation = _nutrient_explanation_cache[nutrient_id]
+    return render_template('main/nutrient.html',
+                           nutrient=nutrient,
+                           ingredients=ingredients,
+                           explanation=explanation)

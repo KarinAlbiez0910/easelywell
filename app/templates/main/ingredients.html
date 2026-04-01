@@ -335,17 +335,12 @@
                         onclick="toggleNutrients(event, this)">
                     Nutrients <span class="arrow">▾</span>
                 </button>
-                <div class="nutrients-dropdown" data-concern-id="{{ concern.id }}">
+                <div class="nutrients-dropdown">
                     {% for ni in ingredient.nutrients %}
-                    <span class="nutrient-item" style="display:inline-block; margin: 0.2rem 0.15rem;">
-                        <span class="nutrient-tag" style="margin:0;">{{ ni.nutrient.name }}</span><button
-                            type="button"
-                            class="why-btn"
-                            data-nutrient-id="{{ ni.nutrient.id }}"
-                            onclick="loadExplanation(event, this)"
-                            style="background:none;border:none;color:var(--green-dark);font-size:0.7rem;cursor:pointer;padding:0 0.3rem;text-decoration:underline;font-family:'Lato',sans-serif;">Why?</button>
-                        <span class="explanation-text" style="display:none;font-size:0.75rem;color:var(--text-mid);margin-top:0.25rem;line-height:1.4;"></span>
-                    </span>
+                    <a href="{{ url_for('main.nutrient_detail', nutrient_id=ni.nutrient.id) }}"
+                       class="nutrient-tag"
+                       onclick="event.stopPropagation()"
+                       style="text-decoration:none;">{{ ni.nutrient.name }}</a>
                     {% endfor %}
                 </div>
                 <input type="checkbox"
@@ -408,34 +403,6 @@
         const isOpen = dropdown.classList.contains('open');
         dropdown.classList.toggle('open', !isOpen);
         btn.classList.toggle('open', !isOpen);
-    }
-
-    function loadExplanation(event, btn) {
-        event.stopPropagation();
-        if (btn.dataset.loaded) return;
-
-        const dropdown = btn.closest('.nutrients-dropdown');
-        const concernId = dropdown.dataset.concernId;
-        const nutrientId = btn.dataset.nutrientId;
-        const explanationEl = btn.nextElementSibling;
-
-        btn.textContent = 'Loading…';
-        btn.disabled = true;
-        explanationEl.style.display = 'block';
-        explanationEl.textContent = '';
-
-        fetch(`/api/explain/nutrient/${nutrientId}?concern_id=${concernId}`)
-            .then(r => r.json())
-            .then(data => {
-                explanationEl.textContent = data.explanation;
-                btn.dataset.loaded = 'true';
-                btn.style.display = 'none';
-            })
-            .catch(() => {
-                explanationEl.textContent = 'Could not load explanation.';
-                btn.textContent = 'Why?';
-                btn.disabled = false;
-            });
     }
 
     function submitIngredients() {
