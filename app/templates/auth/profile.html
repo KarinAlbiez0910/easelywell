@@ -398,6 +398,21 @@
                 <input type="hidden" name="dietary_preference" id="dietary_preference" value="{{ current_user.dietary_preference or '' }}">
             </div>
 
+            <!-- Cooking Device -->
+            <div class="section">
+                <div class="section-label">Cooking Device</div>
+                <div class="pill-group">
+                    {% set devices = ['Standard', 'Thermomix', 'Air Fryer'] %}
+                    {% for d in devices %}
+                    <div class="pill {% if current_user.cooking_device == d %}selected{% endif %}"
+                         data-group="cooking_device"
+                         data-value="{{ d }}"
+                         onclick="selectPill(this)">{{ d }}</div>
+                    {% endfor %}
+                </div>
+                <input type="hidden" name="cooking_device" id="cooking_device" value="{{ current_user.cooking_device or 'Standard' }}">
+            </div>
+
             <button type="submit" class="btn-primary save-btn">Save Profile</button>
 
         </form>

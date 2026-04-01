@@ -218,11 +218,13 @@ with app.app_context():
 
     # ── Recipes ──────────────────────────────────────────────────
     recipes_data = [
+
+        # ── Standard recipes ─────────────────────────────────────
         {
             "name": "Sardine & Cheese Toast",
             "description": "Sardines pack vitamin D, calcium, and omega-3s in one tiny fish. Adding eggs multiplies the D content.",
             "instructions": "1. Toast sourdough bread until golden.|2. Layer sardines over toast.|3. Broil for 2 minutes.|4. Serve with a fried egg on top.",
-            "prep_time": 10,
+            "prep_time": 10, "cooking_device": "Standard",
             "is_vegan": False, "is_vegetarian": False,
             "is_gluten_free": False, "is_dairy_free": False, "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
             "ingredients": ["Sardines", "Eggs"]
@@ -231,7 +233,7 @@ with app.app_context():
             "name": "Mushroom & Egg Scramble",
             "description": "Eggs are one of the few natural food sources of vitamin D. Olive oil helps absorb fat-soluble vitamins.",
             "instructions": "1. Sauté mushrooms in olive oil for 5 min.|2. Whisk eggs with salt and pepper.|3. Pour eggs over mushrooms and scramble gently.|4. Serve on toast or with salad.",
-            "prep_time": 10,
+            "prep_time": 10, "cooking_device": "Standard",
             "is_vegan": False, "is_vegetarian": True,
             "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": False, "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
             "ingredients": ["Eggs", "Olive Oil"]
@@ -240,7 +242,7 @@ with app.app_context():
             "name": "Salmon & Avocado Bowl",
             "description": "Salmon is the richest food source of vitamin D. Avocado delivers healthy fats that help absorb fat-soluble vitamins.",
             "instructions": "1. Season salmon and pan-fry 4 min each side.|2. Slice avocado and arrange in a bowl.|3. Add a handful of kale.|4. Place salmon on top and drizzle with olive oil.",
-            "prep_time": 15,
+            "prep_time": 15, "cooking_device": "Standard",
             "is_vegan": False, "is_vegetarian": False,
             "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
             "ingredients": ["Salmon", "Avocado", "Kale", "Olive Oil"]
@@ -249,7 +251,7 @@ with app.app_context():
             "name": "Spinach & Lentil Power Bowl",
             "description": "Lentils and spinach are iron powerhouses. Vitamin C from lemon juice dramatically boosts iron absorption.",
             "instructions": "1. Cook lentils in salted water for 20 min.|2. Wilt spinach in a pan with garlic and olive oil.|3. Combine lentils and spinach in a bowl.|4. Squeeze fresh lemon juice over the top.",
-            "prep_time": 25,
+            "prep_time": 25, "cooking_device": "Standard",
             "is_vegan": True, "is_vegetarian": True,
             "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
             "ingredients": ["Lentils", "Spinach", "Garlic", "Olive Oil"]
@@ -258,7 +260,7 @@ with app.app_context():
             "name": "Blueberry Oat Breakfast",
             "description": "Oats provide slow-release energy and fiber. Blueberries are packed with antioxidants that support energy metabolism.",
             "instructions": "1. Cook oats with milk or water for 5 min.|2. Stir in a handful of blueberries.|3. Top with almonds and a drizzle of honey.|4. Serve warm.",
-            "prep_time": 10,
+            "prep_time": 10, "cooking_device": "Standard",
             "is_vegan": True, "is_vegetarian": True,
             "is_gluten_free": False, "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": False, "is_high_protein": False, "is_mediterranean": False,
             "ingredients": ["Oats", "Blueberries", "Almonds"]
@@ -267,7 +269,7 @@ with app.app_context():
             "name": "Turmeric Chickpea Stew",
             "description": "Turmeric contains curcumin, a powerful anti-inflammatory compound. Chickpeas add plant protein and zinc to support immunity.",
             "instructions": "1. Sauté garlic in olive oil.|2. Add chickpeas, turmeric, and ginger.|3. Pour in coconut milk and simmer 15 min.|4. Season with salt and serve with rice.",
-            "prep_time": 20,
+            "prep_time": 20, "cooking_device": "Standard",
             "is_vegan": True, "is_vegetarian": True,
             "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
             "ingredients": ["Chickpeas", "Turmeric", "Ginger", "Garlic", "Olive Oil"]
@@ -276,7 +278,7 @@ with app.app_context():
             "name": "Kale & Quinoa Salad",
             "description": "Kale is rich in calcium, vitamin K and vitamin C. Quinoa adds complete protein and magnesium for bone and muscle health.",
             "instructions": "1. Cook quinoa and let cool.|2. Massage kale with olive oil and lemon.|3. Combine kale and quinoa in a bowl.|4. Top with pumpkin seeds and a lemon dressing.",
-            "prep_time": 20,
+            "prep_time": 20, "cooking_device": "Standard",
             "is_vegan": True, "is_vegetarian": True,
             "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
             "ingredients": ["Kale", "Quinoa", "Pumpkin Seeds", "Olive Oil"]
@@ -285,7 +287,7 @@ with app.app_context():
             "name": "Greek Yogurt Parfait",
             "description": "Greek yogurt is rich in probiotics and calcium. Blueberries add antioxidants while oats provide prebiotic fiber.",
             "instructions": "1. Layer Greek yogurt in a glass.|2. Add a handful of blueberries.|3. Top with oats and almonds.|4. Drizzle with honey and serve chilled.",
-            "prep_time": 5,
+            "prep_time": 5, "cooking_device": "Standard",
             "is_vegan": False, "is_vegetarian": True,
             "is_gluten_free": True,  "is_dairy_free": False, "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": False, "is_high_protein": True,  "is_mediterranean": True,
             "ingredients": ["Greek Yogurt", "Blueberries", "Oats", "Almonds"]
@@ -294,7 +296,7 @@ with app.app_context():
             "name": "Walnut & Dark Chocolate Energy Bites",
             "description": "Walnuts are rich in omega-3s and magnesium. Dark chocolate provides antioxidants and a natural mood boost.",
             "instructions": "1. Blend oats, walnuts and dark chocolate in a food processor.|2. Add a spoon of honey and mix well.|3. Roll into small balls.|4. Refrigerate for 30 min before serving.",
-            "prep_time": 15,
+            "prep_time": 15, "cooking_device": "Standard",
             "is_vegan": True, "is_vegetarian": True,
             "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": False, "is_egg_free": True,  "is_low_sugar": False, "is_high_protein": False, "is_mediterranean": False,
             "ingredients": ["Walnuts", "Dark Chocolate", "Oats"]
@@ -303,7 +305,7 @@ with app.app_context():
             "name": "Beetroot & Quinoa Salad",
             "description": "Beetroot is high in folate and potassium, supporting blood pressure and red blood cell production.",
             "instructions": "1. Roast beetroot at 200°C for 40 min.|2. Cook quinoa and let cool.|3. Combine beetroot and quinoa.|4. Dress with olive oil, lemon and fresh herbs.",
-            "prep_time": 45,
+            "prep_time": 45, "cooking_device": "Standard",
             "is_vegan": True, "is_vegetarian": True,
             "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": False, "is_mediterranean": True,
             "ingredients": ["Beetroot", "Quinoa", "Olive Oil"]
@@ -312,7 +314,7 @@ with app.app_context():
             "name": "Chicken & Spinach Stir Fry",
             "description": "Chicken breast is rich in B vitamins and lean protein that supports energy metabolism. Spinach adds iron and folate for red blood cell production.",
             "instructions": "1. Slice chicken breast into strips.|2. Stir fry in olive oil over high heat for 5 min.|3. Add spinach and garlic and cook 2 min.|4. Season with soy sauce and serve with rice.",
-            "prep_time": 15,
+            "prep_time": 15, "cooking_device": "Standard",
             "is_vegan": False, "is_vegetarian": False,
             "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
             "ingredients": ["Chicken Breast", "Spinach", "Garlic", "Olive Oil"]
@@ -321,7 +323,7 @@ with app.app_context():
             "name": "Beef & Broccoli Bowl",
             "description": "Beef is one of the richest sources of iron and zinc. Broccoli adds vitamin C which dramatically boosts iron absorption from the meat.",
             "instructions": "1. Slice beef steak thinly against the grain.|2. Sear in a hot pan for 3 min each side.|3. Steam broccoli until tender.|4. Combine in a bowl and drizzle with olive oil and lemon.",
-            "prep_time": 20,
+            "prep_time": 20, "cooking_device": "Standard",
             "is_vegan": False, "is_vegetarian": False,
             "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": False,
             "ingredients": ["Beef Steak", "Broccoli", "Olive Oil"]
@@ -330,7 +332,7 @@ with app.app_context():
             "name": "Turkey & Sweet Potato Bake",
             "description": "Turkey is a lean protein packed with B vitamins and zinc. Sweet potato provides potassium and fiber for sustained energy and gut health.",
             "instructions": "1. Dice sweet potato and roast at 200°C for 25 min.|2. Season turkey with herbs and bake alongside for 20 min.|3. Combine in a baking dish.|4. Serve with a green salad.",
-            "prep_time": 35,
+            "prep_time": 35, "cooking_device": "Standard",
             "is_vegan": False, "is_vegetarian": False,
             "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": False,
             "ingredients": ["Turkey", "Sweet Potato", "Olive Oil"]
@@ -339,7 +341,263 @@ with app.app_context():
             "name": "Lamb & Chickpea Stew",
             "description": "Lamb is rich in iron, zinc and B12. Chickpeas add fiber and plant protein making this a powerful anti-inflammatory and immune-supporting meal.",
             "instructions": "1. Brown lamb pieces in olive oil.|2. Add chickpeas, turmeric and ginger.|3. Pour in stock and simmer for 30 min.|4. Serve with quinoa or bread.",
-            "prep_time": 40,
+            "prep_time": 40, "cooking_device": "Standard",
+            "is_vegan": False, "is_vegetarian": False,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
+            "ingredients": ["Lamb", "Chickpeas", "Turmeric", "Ginger", "Olive Oil"]
+        },
+
+        # ── Thermomix variants ───────────────────────────────────
+        {
+            "name": "Sardine & Cheese Toast (Thermomix)",
+            "description": "Sardines pack vitamin D, calcium, and omega-3s in one tiny fish. Adding eggs multiplies the D content.",
+            "instructions": "1. Add eggs to bowl, cook 10 min/80°C/speed 3.|2. Meanwhile toast sourdough in toaster.|3. Layer sardines over toast.|4. Top with soft cooked eggs and grated cheese.|5. Serve immediately.",
+            "prep_time": 15, "cooking_device": "Thermomix",
+            "is_vegan": False, "is_vegetarian": False,
+            "is_gluten_free": False, "is_dairy_free": False, "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
+            "ingredients": ["Sardines", "Eggs"]
+        },
+        {
+            "name": "Mushroom & Egg Scramble (Thermomix)",
+            "description": "Eggs are one of the few natural food sources of vitamin D. Olive oil helps absorb fat-soluble vitamins.",
+            "instructions": "1. Add mushrooms to bowl, chop 3 sec/speed 4.|2. Add olive oil, sauté 5 min/120°C/speed 1.|3. Add whisked eggs, season with salt and pepper.|4. Cook 6 min/80°C/speed 3 for creamy scramble.|5. Serve immediately.",
+            "prep_time": 15, "cooking_device": "Thermomix",
+            "is_vegan": False, "is_vegetarian": True,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": False, "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
+            "ingredients": ["Eggs", "Olive Oil"]
+        },
+        {
+            "name": "Salmon & Avocado Bowl (Thermomix)",
+            "description": "Salmon is the richest food source of vitamin D. Avocado delivers healthy fats that help absorb fat-soluble vitamins.",
+            "instructions": "1. Add 500ml water to bowl, insert Varoma.|2. Season salmon, place in Varoma dish.|3. Cook 15 min/Varoma/speed 1.|4. Slice avocado while salmon cooks.|5. Serve salmon over avocado, drizzle olive oil.",
+            "prep_time": 20, "cooking_device": "Thermomix",
+            "is_vegan": False, "is_vegetarian": False,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
+            "ingredients": ["Salmon", "Avocado", "Kale", "Olive Oil"]
+        },
+        {
+            "name": "Spinach & Lentil Power Bowl (Thermomix)",
+            "description": "Lentils and spinach are iron powerhouses. Vitamin C from lemon juice dramatically boosts iron absorption.",
+            "instructions": "1. Add onion and garlic, chop 5 sec/speed 5.|2. Sauté 3 min/120°C/speed 1.|3. Add lentils, stock, spices.|4. Cook 25 min/100°C/speed 1 reverse.|5. Stir in spinach, cook 2 min more.",
+            "prep_time": 35, "cooking_device": "Thermomix",
+            "is_vegan": True, "is_vegetarian": True,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
+            "ingredients": ["Lentils", "Spinach", "Garlic", "Olive Oil"]
+        },
+        {
+            "name": "Blueberry Oat Breakfast (Thermomix)",
+            "description": "Oats provide slow-release energy and fiber. Blueberries are packed with antioxidants that support energy metabolism.",
+            "instructions": "1. Add oats and milk to bowl.|2. Cook 8 min/90°C/speed 2.|3. Add blueberries, cook 2 min/90°C/speed 1.|4. Spoon into bowl and top with almonds.|5. Drizzle with honey and serve warm.",
+            "prep_time": 12, "cooking_device": "Thermomix",
+            "is_vegan": True, "is_vegetarian": True,
+            "is_gluten_free": False, "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": False, "is_high_protein": False, "is_mediterranean": False,
+            "ingredients": ["Oats", "Blueberries", "Almonds"]
+        },
+        {
+            "name": "Turmeric Chickpea Stew (Thermomix)",
+            "description": "Turmeric contains curcumin, a powerful anti-inflammatory compound. Chickpeas add plant protein and zinc to support immunity.",
+            "instructions": "1. Add onion and garlic, chop 5 sec/speed 5.|2. Sauté in olive oil 3 min/120°C/speed 1.|3. Add chickpeas, turmeric, tomatoes, stock.|4. Cook 20 min/100°C/speed 1 reverse.|5. Season and serve warm.",
+            "prep_time": 30, "cooking_device": "Thermomix",
+            "is_vegan": True, "is_vegetarian": True,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
+            "ingredients": ["Chickpeas", "Turmeric", "Ginger", "Garlic", "Olive Oil"]
+        },
+        {
+            "name": "Kale & Quinoa Salad (Thermomix)",
+            "description": "Kale is rich in calcium, vitamin K and vitamin C. Quinoa adds complete protein and magnesium for bone and muscle health.",
+            "instructions": "1. Add 500ml water to bowl, insert Varoma.|2. Place quinoa in Varoma dish.|3. Cook 20 min/Varoma/speed 1.|4. Meanwhile massage kale with olive oil and lemon.|5. Combine quinoa with kale and top with pumpkin seeds.",
+            "prep_time": 25, "cooking_device": "Thermomix",
+            "is_vegan": True, "is_vegetarian": True,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
+            "ingredients": ["Kale", "Quinoa", "Pumpkin Seeds", "Olive Oil"]
+        },
+        {
+            "name": "Greek Yogurt Parfait (Thermomix)",
+            "description": "Greek yogurt is rich in probiotics and calcium. Blueberries add antioxidants while oats provide prebiotic fiber.",
+            "instructions": "1. Add oats and almonds to bowl, chop 3 sec/speed 5.|2. Add honey, toast 5 min/100°C/speed 2.|3. Allow granola to cool 5 min.|4. Layer Greek yogurt in glass.|5. Top with cooled granola and blueberries.",
+            "prep_time": 15, "cooking_device": "Thermomix",
+            "is_vegan": False, "is_vegetarian": True,
+            "is_gluten_free": True,  "is_dairy_free": False, "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": False, "is_high_protein": True,  "is_mediterranean": True,
+            "ingredients": ["Greek Yogurt", "Blueberries", "Oats", "Almonds"]
+        },
+        {
+            "name": "Walnut & Dark Chocolate Energy Bites (Thermomix)",
+            "description": "Walnuts are rich in omega-3s and magnesium. Dark chocolate provides antioxidants and a natural mood boost.",
+            "instructions": "1. Add walnuts and oats to bowl, chop 5 sec/speed 7.|2. Add dark chocolate, blend 3 sec/speed 5.|3. Add honey, mix 15 sec/speed 4.|4. Roll mixture into small balls with damp hands.|5. Refrigerate 30 min until firm.",
+            "prep_time": 15, "cooking_device": "Thermomix",
+            "is_vegan": True, "is_vegetarian": True,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": False, "is_egg_free": True,  "is_low_sugar": False, "is_high_protein": False, "is_mediterranean": False,
+            "ingredients": ["Walnuts", "Dark Chocolate", "Oats"]
+        },
+        {
+            "name": "Beetroot & Quinoa Salad (Thermomix)",
+            "description": "Beetroot is high in folate and potassium, supporting blood pressure and red blood cell production.",
+            "instructions": "1. Peel and cube beetroot, chop in bowl 5 sec/speed 5.|2. Add 400ml water, insert simmering basket with quinoa.|3. Cook 25 min/100°C/speed 1.|4. Drain and combine beetroot and quinoa.|5. Dress with olive oil, lemon and fresh herbs.",
+            "prep_time": 35, "cooking_device": "Thermomix",
+            "is_vegan": True, "is_vegetarian": True,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": False, "is_mediterranean": True,
+            "ingredients": ["Beetroot", "Quinoa", "Olive Oil"]
+        },
+        {
+            "name": "Chicken & Spinach Stir Fry (Thermomix)",
+            "description": "Chicken breast is rich in B vitamins and lean protein that supports energy metabolism. Spinach adds iron and folate for red blood cell production.",
+            "instructions": "1. Add onion and garlic, chop 5 sec/speed 5.|2. Add olive oil, sauté 3 min/120°C/speed 1.|3. Add chicken pieces, cook 15 min/100°C/speed 1 reverse.|4. Add spinach last 2 min/100°C/speed 1 reverse.|5. Season and serve.",
+            "prep_time": 25, "cooking_device": "Thermomix",
+            "is_vegan": False, "is_vegetarian": False,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
+            "ingredients": ["Chicken Breast", "Spinach", "Garlic", "Olive Oil"]
+        },
+        {
+            "name": "Beef & Broccoli Bowl (Thermomix)",
+            "description": "Beef is one of the richest sources of iron and zinc. Broccoli adds vitamin C which dramatically boosts iron absorption from the meat.",
+            "instructions": "1. Add 500ml water to bowl, insert Varoma.|2. Place broccoli florets in Varoma dish.|3. Cook 12 min/Varoma/speed 1.|4. Meanwhile slice and pan fry beef 5 min.|5. Serve beef over steamed broccoli.",
+            "prep_time": 25, "cooking_device": "Thermomix",
+            "is_vegan": False, "is_vegetarian": False,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": False,
+            "ingredients": ["Beef Steak", "Broccoli", "Olive Oil"]
+        },
+        {
+            "name": "Turkey & Sweet Potato Bake (Thermomix)",
+            "description": "Turkey is a lean protein packed with B vitamins and zinc. Sweet potato provides potassium and fiber for sustained energy and gut health.",
+            "instructions": "1. Add 500ml water to bowl, insert Varoma.|2. Cube sweet potato, place in Varoma.|3. Cook 20 min/Varoma/speed 1.|4. Meanwhile season and pan fry turkey 8 min.|5. Serve turkey over steamed sweet potato.",
+            "prep_time": 35, "cooking_device": "Thermomix",
+            "is_vegan": False, "is_vegetarian": False,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": False,
+            "ingredients": ["Turkey", "Sweet Potato", "Olive Oil"]
+        },
+        {
+            "name": "Lamb & Chickpea Stew (Thermomix)",
+            "description": "Lamb is rich in iron, zinc and B12. Chickpeas add fiber and plant protein making this a powerful anti-inflammatory and immune-supporting meal.",
+            "instructions": "1. Chop onion and garlic 5 sec/speed 5.|2. Sauté with olive oil 3 min/120°C/speed 1.|3. Add lamb pieces, brown 5 min/120°C/speed 1 reverse.|4. Add chickpeas, tomatoes, spices, stock.|5. Cook 35 min/100°C/speed 1 reverse.",
+            "prep_time": 50, "cooking_device": "Thermomix",
+            "is_vegan": False, "is_vegetarian": False,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
+            "ingredients": ["Lamb", "Chickpeas", "Turmeric", "Ginger", "Olive Oil"]
+        },
+
+        # ── Air Fryer variants ───────────────────────────────────
+        {
+            "name": "Sardine & Cheese Toast (Air Fryer)",
+            "description": "Sardines pack vitamin D, calcium, and omega-3s in one tiny fish. Adding eggs multiplies the D content.",
+            "instructions": "1. Preheat air fryer to 180°C.|2. Place sourdough slices in basket.|3. Top with sardines and cheese.|4. Air fry 5-6 min until cheese melts.|5. Serve immediately with fried egg.",
+            "prep_time": 10, "cooking_device": "Air Fryer",
+            "is_vegan": False, "is_vegetarian": False,
+            "is_gluten_free": False, "is_dairy_free": False, "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
+            "ingredients": ["Sardines", "Eggs"]
+        },
+        {
+            "name": "Mushroom & Egg Scramble (Air Fryer)",
+            "description": "Eggs are one of the few natural food sources of vitamin D. Olive oil helps absorb fat-soluble vitamins.",
+            "instructions": "1. Preheat air fryer to 180°C.|2. Toss mushrooms in olive oil, season well.|3. Air fry mushrooms 8 min shaking halfway.|4. Meanwhile scramble eggs in pan 3 min.|5. Combine mushrooms and eggs, serve warm.",
+            "prep_time": 15, "cooking_device": "Air Fryer",
+            "is_vegan": False, "is_vegetarian": True,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": False, "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
+            "ingredients": ["Eggs", "Olive Oil"]
+        },
+        {
+            "name": "Salmon & Avocado Bowl (Air Fryer)",
+            "description": "Salmon is the richest food source of vitamin D. Avocado delivers healthy fats that help absorb fat-soluble vitamins.",
+            "instructions": "1. Preheat air fryer to 200°C.|2. Season salmon with olive oil, salt and pepper.|3. Air fry salmon 10-12 min until cooked through.|4. Slice avocado and arrange in a bowl with kale.|5. Place air fried salmon on top and drizzle with olive oil.",
+            "prep_time": 18, "cooking_device": "Air Fryer",
+            "is_vegan": False, "is_vegetarian": False,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
+            "ingredients": ["Salmon", "Avocado", "Kale", "Olive Oil"]
+        },
+        {
+            "name": "Spinach & Lentil Power Bowl (Air Fryer)",
+            "description": "Lentils and spinach are iron powerhouses. Vitamin C from lemon juice dramatically boosts iron absorption.",
+            "instructions": "1. Cook lentils in salted water 20 min, drain.|2. Preheat air fryer to 180°C.|3. Toss garlic cloves in olive oil, air fry 6 min until golden.|4. Wilt spinach in pan 2 min with roasted garlic.|5. Combine lentils and spinach, squeeze lemon over top.",
+            "prep_time": 28, "cooking_device": "Air Fryer",
+            "is_vegan": True, "is_vegetarian": True,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
+            "ingredients": ["Lentils", "Spinach", "Garlic", "Olive Oil"]
+        },
+        {
+            "name": "Blueberry Oat Breakfast (Air Fryer)",
+            "description": "Oats provide slow-release energy and fiber. Blueberries are packed with antioxidants that support energy metabolism.",
+            "instructions": "1. Preheat air fryer to 170°C.|2. Mix oats, blueberries, honey, milk in bowl.|3. Pour into air fryer safe dish.|4. Air fry 12 min until set and golden.|5. Serve warm with fresh blueberries.",
+            "prep_time": 15, "cooking_device": "Air Fryer",
+            "is_vegan": True, "is_vegetarian": True,
+            "is_gluten_free": False, "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": False, "is_high_protein": False, "is_mediterranean": False,
+            "ingredients": ["Oats", "Blueberries", "Almonds"]
+        },
+        {
+            "name": "Turmeric Chickpea Stew (Air Fryer)",
+            "description": "Turmeric contains curcumin, a powerful anti-inflammatory compound. Chickpeas add plant protein and zinc to support immunity.",
+            "instructions": "1. Preheat air fryer to 200°C.|2. Toss chickpeas in olive oil, turmeric and ginger.|3. Air fry chickpeas 15 min until golden, shaking halfway.|4. Simmer garlic in pan 2 min, add coconut milk and heat 5 min.|5. Combine crispy chickpeas with sauce and serve.",
+            "prep_time": 25, "cooking_device": "Air Fryer",
+            "is_vegan": True, "is_vegetarian": True,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
+            "ingredients": ["Chickpeas", "Turmeric", "Ginger", "Garlic", "Olive Oil"]
+        },
+        {
+            "name": "Kale & Quinoa Salad (Air Fryer)",
+            "description": "Kale is rich in calcium, vitamin K and vitamin C. Quinoa adds complete protein and magnesium for bone and muscle health.",
+            "instructions": "1. Preheat air fryer to 180°C.|2. Toss kale in olive oil, season well.|3. Air fry kale 5 min until crispy.|4. Cook quinoa in pan with water 15 min.|5. Combine crispy kale with quinoa, serve.",
+            "prep_time": 25, "cooking_device": "Air Fryer",
+            "is_vegan": True, "is_vegetarian": True,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
+            "ingredients": ["Kale", "Quinoa", "Pumpkin Seeds", "Olive Oil"]
+        },
+        {
+            "name": "Greek Yogurt Parfait (Air Fryer)",
+            "description": "Greek yogurt is rich in probiotics and calcium. Blueberries add antioxidants while oats provide prebiotic fiber.",
+            "instructions": "1. Preheat air fryer to 160°C.|2. Mix oats with honey and butter.|3. Air fry oat granola 8 min until golden.|4. Layer yogurt in glass.|5. Top with air fried granola and berries.",
+            "prep_time": 15, "cooking_device": "Air Fryer",
+            "is_vegan": False, "is_vegetarian": True,
+            "is_gluten_free": True,  "is_dairy_free": False, "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": False, "is_high_protein": True,  "is_mediterranean": True,
+            "ingredients": ["Greek Yogurt", "Blueberries", "Oats", "Almonds"]
+        },
+        {
+            "name": "Walnut & Dark Chocolate Energy Bites (Air Fryer)",
+            "description": "Walnuts are rich in omega-3s and magnesium. Dark chocolate provides antioxidants and a natural mood boost.",
+            "instructions": "1. Preheat air fryer to 160°C.|2. Mix walnuts, oats, dark chocolate chips.|3. Form into small balls, place in basket.|4. Air fry 6-8 min until lightly toasted.|5. Cool completely before serving.",
+            "prep_time": 20, "cooking_device": "Air Fryer",
+            "is_vegan": True, "is_vegetarian": True,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": False, "is_egg_free": True,  "is_low_sugar": False, "is_high_protein": False, "is_mediterranean": False,
+            "ingredients": ["Walnuts", "Dark Chocolate", "Oats"]
+        },
+        {
+            "name": "Beetroot & Quinoa Salad (Air Fryer)",
+            "description": "Beetroot is high in folate and potassium, supporting blood pressure and red blood cell production.",
+            "instructions": "1. Preheat air fryer to 190°C.|2. Cube beetroot, toss in olive oil.|3. Air fry beetroot 20 min until tender.|4. Cook quinoa in pan 15 min.|5. Combine roasted beetroot with quinoa.",
+            "prep_time": 35, "cooking_device": "Air Fryer",
+            "is_vegan": True, "is_vegetarian": True,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": False, "is_mediterranean": True,
+            "ingredients": ["Beetroot", "Quinoa", "Olive Oil"]
+        },
+        {
+            "name": "Chicken & Spinach Stir Fry (Air Fryer)",
+            "description": "Chicken breast is rich in B vitamins and lean protein that supports energy metabolism. Spinach adds iron and folate for red blood cell production.",
+            "instructions": "1. Preheat air fryer to 200°C.|2. Toss chicken strips in olive oil and minced garlic, season well.|3. Air fry chicken 12-14 min shaking halfway.|4. Wilt spinach in a pan with garlic 2 min.|5. Combine air fried chicken with wilted spinach and serve.",
+            "prep_time": 20, "cooking_device": "Air Fryer",
+            "is_vegan": False, "is_vegetarian": False,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
+            "ingredients": ["Chicken Breast", "Spinach", "Garlic", "Olive Oil"]
+        },
+        {
+            "name": "Beef & Broccoli Bowl (Air Fryer)",
+            "description": "Beef is one of the richest sources of iron and zinc. Broccoli adds vitamin C which dramatically boosts iron absorption from the meat.",
+            "instructions": "1. Preheat air fryer to 200°C.|2. Toss broccoli florets in olive oil and season.|3. Air fry broccoli 8 min until tender-crisp.|4. Season beef strips, add to basket.|5. Air fry beef 6-8 min until browned, combine with broccoli and serve.",
+            "prep_time": 20, "cooking_device": "Air Fryer",
+            "is_vegan": False, "is_vegetarian": False,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": False,
+            "ingredients": ["Beef Steak", "Broccoli", "Olive Oil"]
+        },
+        {
+            "name": "Turkey & Sweet Potato Bake (Air Fryer)",
+            "description": "Turkey is a lean protein packed with B vitamins and zinc. Sweet potato provides potassium and fiber for sustained energy and gut health.",
+            "instructions": "1. Preheat air fryer to 190°C.|2. Cube sweet potato, toss in olive oil and season.|3. Air fry sweet potato 18 min until golden, shaking halfway.|4. Season turkey, place in basket alongside potato.|5. Air fry together 12 more min until turkey is cooked through.",
+            "prep_time": 35, "cooking_device": "Air Fryer",
+            "is_vegan": False, "is_vegetarian": False,
+            "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": False,
+            "ingredients": ["Turkey", "Sweet Potato", "Olive Oil"]
+        },
+        {
+            "name": "Lamb & Chickpea Stew (Air Fryer)",
+            "description": "Lamb is rich in iron, zinc and B12. Chickpeas add fiber and plant protein making this a powerful anti-inflammatory and immune-supporting meal.",
+            "instructions": "1. Preheat air fryer to 200°C.|2. Season lamb pieces with turmeric, ginger and olive oil.|3. Air fry lamb 18-20 min until browned, shaking halfway.|4. Simmer chickpeas in spiced stock in pan 15 min.|5. Combine air fried lamb with chickpea sauce and serve.",
+            "prep_time": 40, "cooking_device": "Air Fryer",
             "is_vegan": False, "is_vegetarian": False,
             "is_gluten_free": True,  "is_dairy_free": True,  "is_nut_free": True,  "is_egg_free": True,  "is_low_sugar": True,  "is_high_protein": True,  "is_mediterranean": True,
             "ingredients": ["Lamb", "Chickpeas", "Turmeric", "Ginger", "Olive Oil"]
@@ -361,6 +619,7 @@ with app.app_context():
             is_low_sugar=r["is_low_sugar"],
             is_high_protein=r["is_high_protein"],
             is_mediterranean=r["is_mediterranean"],
+            cooking_device=r.get("cooking_device", "Standard"),
         )
         db.session.add(recipe)
         db.session.flush()

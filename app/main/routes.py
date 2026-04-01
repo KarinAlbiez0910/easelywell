@@ -112,7 +112,15 @@ def recipes():
     for ri in matching:
         recipe_scores[ri.recipe_id] = recipe_scores.get(ri.recipe_id, 0) + 1
 
-    top_ids = sorted(recipe_scores, key=recipe_scores.get, reverse=True)[:3]
+    cooking_device = current_user.cooking_device or 'Standard'
+    device_recipe_ids = {
+        r.id for r in Recipe.query.filter_by(cooking_device=cooking_device).all()
+    }
+    device_scores = {
+        rid: score for rid, score in recipe_scores.items()
+        if rid in device_recipe_ids
+    }
+    top_ids = sorted(device_scores, key=device_scores.get, reverse=True)[:3]
     query = Recipe.query.filter(Recipe.id.in_(top_ids))
 
     preference = current_user.dietary_preference

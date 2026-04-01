@@ -90,6 +90,7 @@ def profile():
         current_user.gender = request.form.get('gender', '')
         current_user.family_situation = request.form.get('family_situation', '')
         current_user.dietary_preference = request.form.get('dietary_preference', '')
+        current_user.cooking_device = request.form.get('cooking_device', 'Standard')
         db.session.commit()
         flash('Profile saved! 🌿', 'success')
         return redirect(url_for('auth.profile'))

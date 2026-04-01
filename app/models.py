@@ -20,6 +20,7 @@ class User(UserMixin, db.Model):
     family_situation = db.Column(db.String(50)) # e.g. "single", "family with kids"
     gender = db.Column(db.String(50))
     dietary_preference = db.Column(db.String(50)) # e.g. "vegan", "vegetarian"
+    cooking_device = db.Column(db.String(50), default='Standard')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def set_password(self, password):
@@ -123,6 +124,7 @@ class Recipe(db.Model):
     is_low_sugar = db.Column(db.Boolean, nullable=True, default=False)
     is_high_protein = db.Column(db.Boolean, nullable=True, default=False)
     is_mediterranean = db.Column(db.Boolean, nullable=True, default=False)
+    cooking_device = db.Column(db.String(50), default='Standard')
     prep_time = db.Column(db.Integer)           # in minutes
 
     ingredients = db.relationship('RecipeIngredient', back_populates='recipe')
